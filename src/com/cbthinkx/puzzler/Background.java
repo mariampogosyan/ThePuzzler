@@ -16,7 +16,7 @@ public class Background extends JPanel {
 		setLayout(null);
 		this.setDoubleBuffered(true);
 		try {
-			this.background = ImageIO.read(new File("C:/Users/Masha/Documents/GitHub/ThePuzzler/puzzle.jpg"));
+			this.background = ImageIO.read(new File("res/puzzle.jpg"));
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
