@@ -11,9 +11,11 @@ import javax.swing.JPanel;
 public class Background extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Image background;
-	public Background() {
+	protected PFrame frame;
+	public Background(PFrame pf) {
 		super();
 		setLayout(null);
+		frame = pf;
 		this.setDoubleBuffered(true);
 		try {
 			this.background = ImageIO.read(new File("res/puzzle.jpg"));

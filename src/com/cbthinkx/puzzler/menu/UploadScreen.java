@@ -1,32 +1,49 @@
 package com.cbthinkx.puzzler.menu;
 
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.JFileChooser;
 
 public class UploadScreen extends Background{
 	private static final long serialVersionUID = 1L;
-	public UploadScreen(PFrame pframe) {
-		super();
-		JButton upld = new JButton("Upload");
+	public UploadScreen(PFrame pf) {
+		super(pf);
+		JButton upld = new JButton("Chose the file");
+		upld.addActionListener(upload);
+
 		upld.setSize(100, 40);
         upld.setLocation(
-                pframe.getWidth() / 2 - upld.getWidth() / 2,
-                (int)(pframe.getHeight() * 0.25)
+                pf.getWidth() / 2 - upld.getWidth() / 2,
+                (int)(pf.getHeight() * 0.25)
         );
 		add(upld);
 		JTextField size = new JTextField();
 		size.setSize(100, 40);
         size.setLocation(
-                pframe.getWidth() / 2 - upld.getWidth() / 2,
-                (int)(pframe.getHeight() * 0.45)
+                pf.getWidth() / 2 - upld.getWidth() / 2,
+                (int)(pf.getHeight() * 0.45)
         );
 		add(size);
 		JButton next = new JButton("next");
+		next.addActionListener(nxt);
 		next.setSize(100, 40);
         next.setLocation(
-                pframe.getWidth() / 2 - next.getWidth() / 2 ,
-                (int)(pframe.getHeight() * 0.65)
+                pf.getWidth() / 2 - next.getWidth() / 2 ,
+                (int)(pf.getHeight() * 0.65)
         );
 		add(next);
 	}
+	private ActionListener upload = ae -> {
+		JFileChooser fileChooser = new JFileChooser("C:\\");
+		int returnValue = fileChooser.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {	     
+			System.out.println("yay");
+			fileChooser.setMultiSelectionEnabled(false);
+		}
+	};
+	private ActionListener nxt = ae -> {
+		frame.setView(PFrame.Puzzle_settings);	
+	};
 }
