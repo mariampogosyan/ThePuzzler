@@ -1,4 +1,4 @@
-package com.cbthinkx.puzzler;
+package com.cbthinkx.puzzler.menu;
 
 import java.awt.Graphics;
 import java.awt.Image;
