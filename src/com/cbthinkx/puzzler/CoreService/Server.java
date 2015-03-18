@@ -10,11 +10,6 @@ import java.net.Socket;
 public class Server {
     public static void main(String[] args) throws IOException {
 
-//        if (args.length != 1) {
-//            System.err.println("Usage: java EchoServer <port number>");
-//            System.exit(1);
-//        }
-
         int portNumber = 25565;
 
         try (
@@ -36,7 +31,5 @@ public class Server {
             System.out.println(e.getMessage());
         }
     }
-
-
 
 }

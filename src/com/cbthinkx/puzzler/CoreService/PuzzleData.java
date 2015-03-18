@@ -1,8 +1,6 @@
 package com.cbthinkx.puzzler.CoreService;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.regex.Pattern;
 
 public class PuzzleData {
@@ -78,6 +76,9 @@ public class PuzzleData {
 
 
     }
+    public PuzzleData() {
+
+    }
     @Override
     public String toString() {
         return "PuzzleData{" +
@@ -89,7 +90,7 @@ public class PuzzleData {
                 '}';
     }
 
-    public double[] fromString(String d) {
+    private double[] fromString(String d) {
         String data = Pattern.compile("PuzzleData").matcher(d).replaceAll("");
         data = data.replace("{","");
         data = data.replace("}","");
@@ -99,19 +100,5 @@ public class PuzzleData {
             ret[x] = Double.parseDouble(parts[x]);
         }
         return ret;
-    }
-
-    public static void main(String[] sa) {
-        BufferedImage bi = null;
-        try {
-            bi = ImageIO.read(new File("res/puzzle.jpg"));
-        } catch (Exception e) {
-
-        }
-        PuzzleData pd = new PuzzleData(PieceShape.SQUARE, PuzzleShape.SQUARE, PuzzleSkill.CHILD, PuzzleType.ONESIDED, null, 20);
-        String newPD = pd.toString();
-        System.out.println(newPD);
-        PuzzleData pd2 = new PuzzleData(newPD, null);
-        System.out.println(pd2.toString());
     }
 }

@@ -9,16 +9,9 @@ import java.net.UnknownHostException;
 
 public class TestClient {
     public static void main(String[] args) throws IOException {
-
-//        if (args.length != 2) {
-//            System.err.println(
-//                    "Usage: java EchoClient <host name> <port number>");
-//            System.exit(1);
-//        }
-
-        String hostName = "localhost";
-        int portNumber = 25565;
-
+        new TestClient().doit("localhost", 25565);
+    }
+    public void doit(String hostName, int portNumber){
         try (
                 Socket echoSocket = new Socket(hostName, portNumber);
                 PrintWriter out =
