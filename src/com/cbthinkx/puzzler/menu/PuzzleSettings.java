@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import com.cbthinkx.puzzler.CoreService.PieceShape;
 import com.cbthinkx.puzzler.CoreService.PuzzleShape;
 import com.cbthinkx.puzzler.CoreService.PuzzleSkill;
+import com.cbthinkx.puzzler.CoreService.PuzzleType;
 
 public class PuzzleSettings extends Background{
 		private static final long serialVersionUID = 1L;
@@ -64,6 +65,7 @@ public class PuzzleSettings extends Background{
 			frame.getData().setShape(PuzzleShape.valueOf(shape.getSelectedIndex()));
 			frame.getData().setSkill(PuzzleSkill.valueOf(skill.getSelectedIndex()));
 			frame.getData().setShapeType(PieceShape.valueOf(puzzle.getSelectedIndex()));
+			frame.getData().setType(PuzzleType.valueOf(side.getSelectedIndex()));
 			System.out.println(frame.getData().toString());
 		};
 	}
