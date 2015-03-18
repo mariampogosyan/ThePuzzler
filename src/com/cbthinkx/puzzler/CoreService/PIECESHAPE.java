@@ -1,7 +1,7 @@
 package com.cbthinkx.puzzler.CoreService;
 
 public enum PieceShape {
-    SQUARE (1), JIGSAW (2);
+    SQUARE(1), JIGSAW(2);
     private  final int val;
     PieceShape (int i) {
         this.val = i;
