@@ -9,7 +9,7 @@ public enum PuzzleSkill {
     public int getVal() {
         return val;
     }
-    public PuzzleSkill valueOf(int x){
+    public static PuzzleSkill valueOf(int x){
         for (PuzzleSkill y : PuzzleSkill.values()) {
             if (y.getVal() == x){
                 return y;

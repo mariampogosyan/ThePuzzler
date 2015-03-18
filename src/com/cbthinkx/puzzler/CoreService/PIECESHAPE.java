@@ -1,20 +1,21 @@
 package com.cbthinkx.puzzler.CoreService;
 
-public enum PuzzleShape {
-    HEART(1), ELLIPSE(2), NGON(3), SQUARE(4);
+public enum PieceShape {
+    SQUARE (1), JIGSAW (2);
     private  final int val;
-    PuzzleShape (int i) {
+    PieceShape (int i) {
         this.val = i;
     }
     public int getVal() {
         return val;
     }
-    public static PuzzleShape valueOf(int x){
-        for (PuzzleShape y : PuzzleShape.values()) {
+    public static PieceShape valueOf(int x){
+        for (PieceShape y : PieceShape.values()) {
             if (y.getVal() == x){
                 return y;
             }
         }
         return null;
     }
+
 }

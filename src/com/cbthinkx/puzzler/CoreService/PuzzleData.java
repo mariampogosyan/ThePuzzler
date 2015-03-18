@@ -69,12 +69,12 @@ public class PuzzleData {
     public PuzzleData(String data, BufferedImage img) {
         this.image = img;
         this.origImage = img;
-        double[] x = fromString(data);
-        this.size = x[0];
-        this.shapeType = shapeType.valueOf((int)x[1]);
-        this.shape = shape.valueOf((int)x[2]);
-        this.skill = skill.valueOf((int)x[3]);
-        this.type = type.valueOf((int)x[4]);
+        double[] vals = fromString(data);
+        this.size = vals[0];
+        this.shapeType = PieceShape.valueOf((int)(vals[1]));
+        this.shape = PuzzleShape.valueOf((int)(vals[2]));
+        this.skill = PuzzleSkill.valueOf((int)(vals[3]));
+        this.type = PuzzleType.valueOf((int)(vals[4]));
 
 
     }
@@ -94,9 +94,8 @@ public class PuzzleData {
         data = data.replace("{","");
         data = data.replace("}","");
         String[] parts = data.split(",");
-        double[] ret ={} ;
+        double[] ret ={0,0,0,0,0};
         for (int x = 0; x < parts.length; x++) {
-            System.out.println(parts[x]);
             ret[x] = Double.parseDouble(parts[x]);
         }
         return ret;
@@ -111,6 +110,7 @@ public class PuzzleData {
         }
         PuzzleData pd = new PuzzleData(PieceShape.SQUARE, PuzzleShape.SQUARE, PuzzleSkill.CHILD, PuzzleType.ONESIDED, null, 20);
         String newPD = pd.toString();
+        System.out.println(newPD);
         PuzzleData pd2 = new PuzzleData(newPD, null);
         System.out.println(pd2.toString());
     }

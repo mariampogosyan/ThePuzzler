@@ -9,7 +9,7 @@ public enum PuzzleType {
     public int getVal() {
         return val;
     }
-    public PuzzleType valueOf(int x){
+    public static PuzzleType valueOf(int x){
         for (PuzzleType y : PuzzleType.values()) {
             if (y.getVal() == x){
                 return y;
