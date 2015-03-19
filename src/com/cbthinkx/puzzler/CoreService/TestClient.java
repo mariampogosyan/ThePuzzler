@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 
 public class TestClient {
     public static void main(String[] args) throws IOException {
@@ -27,21 +28,21 @@ public class TestClient {
         );
 
         try (
-                Socket echoSocket = new Socket(hostName, portNumber);
-                PrintWriter out =
-                        new PrintWriter(echoSocket.getOutputStream(), true);
+                Socket socket = new Socket(hostName, portNumber);
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                OutputStream outputStream = socket.getOutputStream()
         ) {
             String userInput = pd.toString();
             out.println(userInput);
-            BufferedOutputStream  out2= new BufferedOutputStream(echoSocket.getOutputStream());
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(pd.getImage(), "jpg", baos);
-            byte[] bytes = baos.toByteArray();
-            System.out.println(bytes.length);
-            out2.write(bytes);
-            out2.close();
-            out.close();
-
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(pd.getImage(), "jpg", byteArrayOutputStream);
+            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+            outputStream.write(size);
+            outputStream.write(byteArrayOutputStream.toByteArray());
+            outputStream.flush();
+            System.out.println("Flushed: " + System.currentTimeMillis());
+            System.out.println("Closing: " + System.currentTimeMillis());
+            socket.close();
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);

@@ -2,7 +2,15 @@ package com.cbthinkx.puzzler.menu;
 
 import java.awt.CardLayout;
 import java.awt.EventQueue;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -12,7 +20,8 @@ public class PFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public static final String Upload_Screen = "upload";
 	public static final String Puzzle_settings = "puzzle";
-
+    private static final String hostName = "localhost";
+    private static final int portNumber = 25565;
 	private JPanel puzzler;
     private int height = 550;
     private int width = 550;
@@ -44,11 +53,32 @@ public class PFrame extends JFrame {
 		);
 	};
     public boolean sendPuzzle() {
-        try {
-
-        } catch (Exception e) {
-            System.err.println(e);
-            return false;
+        try (
+                Socket socket = new Socket(hostName, portNumber);
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                OutputStream outputStream = socket.getOutputStream()
+        ) {
+            out.println(getData().toString());
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(getData().getImage(), "jpg", byteArrayOutputStream);
+            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+            outputStream.write(size);
+            outputStream.write(byteArrayOutputStream.toByteArray());
+            outputStream.flush();
+            System.out.println("Flushed: " + System.currentTimeMillis());
+            System.out.println("Closing: " + System.currentTimeMillis());
+            //wait for pdf to be returned
+            //
+            //
+            //before closing the socket
+            socket.close();
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host " + hostName);
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to " +
+                    hostName);
+            System.exit(1);
         }
         return true;
     }

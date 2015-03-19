@@ -70,6 +70,7 @@ public class PuzzleSettings extends Background{
 			frame.getData().setSkill(PuzzleSkill.valueOf(skill.getSelectedIndex()));
 			frame.getData().setShapeType(PieceShape.valueOf(puzzle.getSelectedIndex()));
 			frame.getData().setType(PuzzleType.valueOf(side.getSelectedIndex()));
+            frame.sendPuzzle();
 			System.out.println(frame.getData().toString());
 		}
 	};
