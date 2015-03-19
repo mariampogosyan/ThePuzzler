@@ -43,6 +43,15 @@ public class PFrame extends JFrame {
 				() -> new PFrame()
 		);
 	};
+    public boolean sendPuzzle() {
+        try {
+
+        } catch (Exception e) {
+            System.err.println(e);
+            return false;
+        }
+        return true;
+    }
 }
 
 

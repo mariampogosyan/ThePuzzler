@@ -73,8 +73,6 @@ public class PuzzleData {
         this.shape = PuzzleShape.valueOf((int)(vals[2]));
         this.skill = PuzzleSkill.valueOf((int)(vals[3]));
         this.type = PuzzleType.valueOf((int)(vals[4]));
-
-
     }
     public PuzzleData() {
 
