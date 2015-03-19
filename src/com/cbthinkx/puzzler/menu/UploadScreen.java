@@ -2,17 +2,25 @@ package com.cbthinkx.puzzler.menu;
 
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.cbthinkx.puzzler.CoreService.PuzzleType;
 
 public class UploadScreen extends Background{
 	private static final long serialVersionUID = 1L;
-	private JTextField size;
+	private JTextField diag;
 	private BufferedImage image = null;
+	private double size;
+	private File imageFile;
+	private JFileChooser fc;
 	public UploadScreen(PFrame pf) {
 		super(pf);
 		JButton upld = new JButton("Chose the file");
@@ -24,13 +32,13 @@ public class UploadScreen extends Background{
                 (int)(pf.getHeight() * 0.25)
         );
 		add(upld);
-		size = new JTextField();
-		size.setSize(100, 40);
-        size.setLocation(
+		diag = new JTextField();
+		diag.setSize(100, 40);
+        diag.setLocation(
                 pf.getWidth() / 2 - upld.getWidth() / 2,
                 (int)(pf.getHeight() * 0.45)
         );
-		add(size);
+		add(diag);
 		JButton next = new JButton("next");
 		next.addActionListener(nxt);
 		next.setSize(100, 40);
@@ -41,21 +49,45 @@ public class UploadScreen extends Background{
 		add(next);
 	}
 	private ActionListener upload = ae -> {
-		JFileChooser fileChooser = new JFileChooser("C:\\");
-		int returnValue = fileChooser.showOpenDialog(null);
+		fc = new JFileChooser("C:\\");
+		fc.setAcceptAllFileFilterUsed(false);
+		fc.setFileFilter(
+			new FileNameExtensionFilter(
+			        "JPG & PNG Images", "jpg", "png")
+		);
+		int returnValue = fc.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {	     
-			System.out.println("yay");
-			fileChooser.setMultiSelectionEnabled(false);
+			fc.setMultiSelectionEnabled(false);
+			imageFile = fc.getSelectedFile();
+			try {
+	            image = ImageIO.read(imageFile);
+	        } catch(IOException e) {
+	            System.out.println("read error: " + e.getMessage());
+	        }		
 		}
 	};
-
 	private ActionListener nxt = ae -> {
-		frame.setView(PFrame.Puzzle_settings);	
-		System.out.println(size.getText().toString());
-		System.out.println(Double.parseDouble(size.getText().toString()));
-		double sizeD = Double.parseDouble(size.getText().toString());
-		frame.getData().setSize(sizeD);
-		frame.getData().setImage(image);
-		frame.getData().setOrigImage(image);
+		if (image == null) {
+			JOptionPane.showMessageDialog(frame, "Please, upload the picture");
+		} else {
+			if (diag.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(frame, "Please, specify your size");	
+			} else {
+				try {
+					size = Double.parseDouble(diag.getText().toString());
+						if (size > 5) {
+							frame.setView(PFrame.Puzzle_settings);	
+							size = Double.parseDouble(diag.getText().toString());
+							frame.getData().setSize(size);
+							frame.getData().setImage(image);
+							frame.getData().setOrigImage(image);
+						} else {
+							 JOptionPane.showMessageDialog(frame, "Please, enter a bigger number");
+						}
+				 	} catch (NumberFormatException e) {
+				 		 JOptionPane.showMessageDialog(frame, "Please, enter a valid number");					   
+				 	}	 
+			}
+		}
 	};
 }
