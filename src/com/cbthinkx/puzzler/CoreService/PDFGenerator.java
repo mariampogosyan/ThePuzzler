@@ -25,23 +25,25 @@ public class PDFGenerator {
 		// Start a new content stream which will "hold" the to be created content
 		PDPageContentStream contentStream = new PDPageContentStream(document, page);
 		int imageNum = 0;
-		int row = 0;
-		for (int i = 0; i < arrList.size(); i=i+3) {
-			for(int j = 0; j < 3; j++) {
+//		int row = 0;
+		for (int i = 0; i < arrList.size(); i++) {
+//			for(int j = 0; j < 3; j++) {
 			     try {
-                        if (imageNum == 4) imageNum--;
-			    	 	BufferedImage img = arrList.get(imageNum);
+			    	 	BufferedImage img = arrList.get(i);
 			            PDXObjectImage ximage = new PDPixelMap(document, img);
 			            float scale = 1.0f; // alter this value to set the image size
-			            int x = 100 + (j * img.getWidth());
-			            int y = 400 + (row * img.getHeight());
-			            contentStream.drawXObject(ximage, x, y, ximage.getWidth()*scale, ximage.getHeight()*scale);
-			            imageNum++;
+//			            int x = 100 + (j * img.getWidth());
+//			            int y = 400 + (row * img.getHeight());
+			            contentStream.drawXObject(ximage, 50, 50, ximage.getWidth()*scale, ximage.getHeight()*scale);
+                     contentStream.close();
+                     PDPage nPage = new PDPage();
+                     document.addPage(nPage);
+                     contentStream = new PDPageContentStream(document, nPage);
 			        } catch (FileNotFoundException fnfex) {
 			            System.out.println("No image for you");
 			        }
-			}
-			row++;
+//			}
+//			row++;
 		}
 
 		// Make sure that the content stream is closed:

@@ -54,7 +54,7 @@ public class Server {
                 ImageIO.write(image, "jpg", new File("test2.jpg"));
                 PuzzleData pd = new PuzzleData(data, image);
                 System.out.println(pd.toString());
-                
+
                 if (pd.getShapeType() == PieceShape.SQUARE) {
                 	new Square(pd);
                 }

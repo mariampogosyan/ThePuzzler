@@ -1,9 +1,11 @@
 package com.cbthinkx.puzzler.CoreService;
 
 
+import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class ImageUtility {
     public BufferedImage newImage (double size, PuzzleShape pShape, BufferedImage img) {
@@ -11,9 +13,15 @@ public class ImageUtility {
         double[] dim = getDimensionsFromDiagnal(size, img.getHeight(), img.getWidth());
         BufferedImage newImg = new BufferedImage((int)dim[0], (int)dim[1], BufferedImage.TYPE_INT_ARGB);
         AffineTransform at = new AffineTransform();
-        at.scale(dim[2], dim[2]);
+        at.scale(1, 1);
         AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-        return scaleOp.filter(img, newImg);
+        BufferedImage image = scaleOp.filter(img, newImg);
+        try {
+            ImageIO.write(image, "jpg", new File("test3.jpg"));
+        } catch (Exception e){
+
+        }
+        return image;
     }
 
     private double[] getDimensionsFromDiagnal (double dia, double height, double width) {

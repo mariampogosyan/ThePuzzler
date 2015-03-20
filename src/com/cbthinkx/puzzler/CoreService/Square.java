@@ -23,7 +23,7 @@ public class Square {
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
                 PuzzleShape.ELLIPSE,
-                PuzzleSkill.BABY,
+                PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,
                 orig,
                 20.0
@@ -32,7 +32,8 @@ public class Square {
     }
 	public Square (PuzzleData pd) throws Exception{
 		this.pd = pd;
-		nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), pd.getImage());
+//		nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), pd.getImage());
+        nImage = this.pd.getImage();
 		width = nImage.getHeight();
 		height = nImage.getWidth();	
 		switch(pd.getSkill()) {
