@@ -1,6 +1,8 @@
 package com.cbthinkx.puzzler.CoreService;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -8,9 +10,26 @@ public class Square {
 	PuzzleData pd;
 	BufferedImage image;
 	BufferedImage nImage;
-	ArrayList<BufferedImage> pieces;
+	ArrayList<BufferedImage> pieces = new ArrayList<>();
 	int width;
 	int height;
+    public static void main(String[] sa) throws Exception {
+        BufferedImage orig = null;
+        try {
+            orig = ImageIO.read(new File("res/puzzle.jpg"));
+        } catch (Exception e) {
+
+        }
+        PuzzleData pd = new PuzzleData(
+                PieceShape.SQUARE,
+                PuzzleShape.ELLIPSE,
+                PuzzleSkill.BABY,
+                PuzzleType.ONESIDED,
+                orig,
+                20.0
+        );
+        new Square(pd);
+    }
 	public Square (PuzzleData pd) throws Exception{
 		this.pd = pd;
 		nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), pd.getImage());

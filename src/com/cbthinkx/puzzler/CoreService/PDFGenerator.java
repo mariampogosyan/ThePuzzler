@@ -29,9 +29,10 @@ public class PDFGenerator {
 		for (int i = 0; i < arrList.size(); i=i+3) {
 			for(int j = 0; j < 3; j++) {
 			     try {
+                        if (imageNum == 4) imageNum--;
 			    	 	BufferedImage img = arrList.get(imageNum);
 			            PDXObjectImage ximage = new PDPixelMap(document, img);
-			            float scale = 0.5f; // alter this value to set the image size
+			            float scale = 1.0f; // alter this value to set the image size
 			            int x = 100 + (j * img.getWidth());
 			            int y = 400 + (row * img.getHeight());
 			            contentStream.drawXObject(ximage, x, y, ximage.getWidth()*scale, ximage.getHeight()*scale);
