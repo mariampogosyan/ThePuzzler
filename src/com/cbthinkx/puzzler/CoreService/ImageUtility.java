@@ -6,7 +6,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 public class ImageUtility {
-    public BufferedImage ImageUtility (double size, PuzzleShape pShape, BufferedImage img) {
+    public BufferedImage newImage (double size, PuzzleShape pShape, BufferedImage img) {
         img = cropImage(img, pShape);
         double[] dim = getDimensionsFromDiagnal(size, img.getHeight(), img.getWidth());
         BufferedImage newImg = new BufferedImage((int)dim[0], (int)dim[1], BufferedImage.TYPE_INT_ARGB);
