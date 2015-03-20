@@ -20,10 +20,11 @@ public class TestClient {
         }
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
-                PuzzleShape.ELLIPSE,
+                PuzzleShape.SQUARE,
                 PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,
                 orig,
+                "jpg",
                 20.0
         );
 
@@ -35,7 +36,7 @@ public class TestClient {
             String userInput = pd.toString();
             out.println(userInput);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageIO.write(pd.getImage(), "jpg", byteArrayOutputStream);
+            ImageIO.write(pd.getImage(), pd.getImgTail(), byteArrayOutputStream);
             byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
             outputStream.write(size);
             outputStream.write(byteArrayOutputStream.toByteArray());

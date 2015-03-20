@@ -13,7 +13,7 @@ public class Square {
 	ArrayList<BufferedImage> pieces = new ArrayList<>();
 	int width;
 	int height;
-    public static void main(String[] sa) throws Exception {
+    public static void main(String[] sa) {
         BufferedImage orig = null;
         try {
             orig = ImageIO.read(new File("res/puzzle.jpg"));
@@ -26,11 +26,12 @@ public class Square {
                 PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,
                 orig,
+                "",
                 20.0
         );
         new Square(pd);
     }
-	public Square (PuzzleData pd) throws Exception{
+	public Square (PuzzleData pd) {
 		this.pd = pd;
 //		nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), pd.getImage());
         nImage = this.pd.getImage();
@@ -53,31 +54,43 @@ public class Square {
 			break;
 		}
 	}
-	public void baby() throws Exception {
+	public void baby() {
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 2; j++) {
 				image = nImage.getSubimage(j * width / 2, i * height / 2, width / 2, height / 2) ;                               
 				pieces.add(image);
 			}
        }
-		new PDFGenerator(pieces);
+        try {
+            new PDFGenerator(pieces);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
-	public void child() throws Exception{
+	public void child() {
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
 				image = nImage.getSubimage(j * width / 5, i * height / 5, width / 5, height / 5) ;                               
 				pieces.add(image);
 			}
        }
-		new PDFGenerator(pieces);
+        try {
+            new PDFGenerator(pieces);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
-	public void adult() throws Exception{
+	public void adult() {
 		for (int i = 0; i < 7; i++) {
 			for (int j = 0; j < 7; j++) {
 				image = nImage.getSubimage(j * width / 7, i * height / 7, width / 7, height / 7) ;                               
 				pieces.add(image);
 			}
-       }	
-		new PDFGenerator(pieces);
+       }
+        try {
+            new PDFGenerator(pieces);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 }

@@ -56,11 +56,11 @@ public class PFrame extends JFrame {
         try (
                 Socket socket = new Socket(hostName, portNumber);
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                OutputStream outputStream = socket.getOutputStream()
+                OutputStream outputStream = socket.getOutputStream();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()
         ) {
             out.println(getData().toString());
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageIO.write(getData().getImage(), "jpg", byteArrayOutputStream);
+            ImageIO.write(getData().getImage(), getData().getImgTail(), byteArrayOutputStream);
             byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
             outputStream.write(size);
             outputStream.write(byteArrayOutputStream.toByteArray());

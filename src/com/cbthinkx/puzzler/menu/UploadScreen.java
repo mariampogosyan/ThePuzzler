@@ -21,6 +21,7 @@ public class UploadScreen extends Background{
 	private double size;
 	private File imageFile;
 	private JFileChooser fc;
+    private String imgTail;
 	public UploadScreen(PFrame pf) {
 		super(pf);
 		JButton upld = new JButton("Chose the file");
@@ -59,6 +60,7 @@ public class UploadScreen extends Background{
 		if (returnValue == JFileChooser.APPROVE_OPTION) {	     
 			fc.setMultiSelectionEnabled(false);
 			imageFile = fc.getSelectedFile();
+            imgTail = imageFile.getName().substring(imageFile.getName().length()-3, imageFile.getName().length());
 			try {
 	            image = ImageIO.read(imageFile);
 	        } catch(IOException e) {
@@ -81,6 +83,7 @@ public class UploadScreen extends Background{
 							frame.getData().setSize(size);
 							frame.getData().setImage(image);
 							frame.getData().setOrigImage(image);
+                            frame.getData().setImgTail(imgTail);
 						} else {
 							 JOptionPane.showMessageDialog(frame, "Please, enter a bigger number");
 						}

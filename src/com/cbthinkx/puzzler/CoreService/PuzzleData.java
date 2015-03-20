@@ -1,6 +1,7 @@
 package com.cbthinkx.puzzler.CoreService;
 
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
 import java.util.regex.Pattern;
 
 public class PuzzleData {
@@ -11,6 +12,7 @@ public class PuzzleData {
     private PuzzleType type;
     private BufferedImage image;
     private BufferedImage origImage;
+    private String imgTail;
 
     public double getSize() {
         return size;
@@ -54,8 +56,14 @@ public class PuzzleData {
     public void setOrigImage(BufferedImage origImage) {
         this.origImage = origImage;
     }
+    public String getImgTail() {
+        return imgTail;
+    }
+    public void setImgTail(String imgTail) {
+        this.imgTail = imgTail;
+    }
 
-    public PuzzleData(PieceShape shapeType, PuzzleShape shape, PuzzleSkill skill, PuzzleType type, BufferedImage image, double size) {
+    public PuzzleData(PieceShape shapeType, PuzzleShape shape, PuzzleSkill skill, PuzzleType type, BufferedImage image, String imgTail, double size) {
         this.shapeType = shapeType;
         this.shape = shape;
         this.skill = skill;
@@ -63,6 +71,7 @@ public class PuzzleData {
         this.image = image;
         this.origImage = image;
         this.size = size;
+        this.imgTail = imgTail;
     }
     public PuzzleData(String data, BufferedImage img) {
         this.image = img;
@@ -73,6 +82,8 @@ public class PuzzleData {
         this.shape = PuzzleShape.valueOf((int)(vals[2]));
         this.skill = PuzzleSkill.valueOf((int)(vals[3]));
         this.type = PuzzleType.valueOf((int)(vals[4]));
+        this.imgTail = imageTailString(data);
+        System.out.println(imgTail);
     }
     public PuzzleData() {
 
@@ -85,6 +96,7 @@ public class PuzzleData {
                 "," + shape.getVal() +
                 "," + skill.getVal() +
                 "," + type.getVal() +
+                "," + imgTail +
                 '}';
     }
 
@@ -94,9 +106,16 @@ public class PuzzleData {
         data = data.replace("}","");
         String[] parts = data.split(",");
         double[] ret ={0,0,0,0,0};
-        for (int x = 0; x < parts.length; x++) {
+        for (int x = 0; x < parts.length-1; x++) {
             ret[x] = Double.parseDouble(parts[x]);
         }
         return ret;
+    }
+    private String imageTailString(String d) {
+        String data = Pattern.compile("PuzzleData").matcher(d).replaceAll("");
+        data = data.replace("{","");
+        data = data.replace("}","");
+        String[] parts = data.split(",");
+        return parts[parts.length - 1];
     }
 }
