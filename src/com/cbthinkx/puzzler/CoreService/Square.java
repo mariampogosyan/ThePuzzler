@@ -41,8 +41,8 @@ public class Square {
 		this.pd = pd;
 //		nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), pd.getImage());
         nImage = this.pd.getImage();
-		width = nImage.getHeight();
-		height = nImage.getWidth();	
+		height = nImage.getHeight();
+		width = nImage.getWidth();	
 		switch(pd.getSkill()) {
 		case BABY: {
 			baby();
