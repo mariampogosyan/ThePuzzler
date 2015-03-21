@@ -22,20 +22,28 @@ public class Square {
     public static void main(String[] sa) {
         BufferedImage orig = null;
         try {
-            orig = ImageIO.read(new File("res/test.jpg"));
+            orig = ImageIO.read(new File("res/puzzle.jpg"));
         } catch (Exception e) {
 
         }
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
-                PuzzleShape.ELLIPSE,
-                PuzzleSkill.ADULT,
+                PuzzleShape.SQUARE,
+                PuzzleSkill.BABY,
                 PuzzleType.ONESIDED,
                 orig,
-                "JPG",
+                "jpg",
                 20.0
         );
-        new Square(pd);
+        Square sp = new Square(pd);
+        System.out.println(sp.getPieces().size());
+        PDFGenerator pdfg = new PDFGenerator(sp.getPieces());
+        System.out.println(pdfg.getfinalPuzzle().getNumberOfPages());
+        try {
+            pdfg.getfinalPuzzle().save(new File("goodPDF.pdf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 	public Square (PuzzleData pd) {
 		this.pd = pd;

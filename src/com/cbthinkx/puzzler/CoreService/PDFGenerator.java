@@ -11,43 +11,90 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 
 public class PDFGenerator {
-    private PDDocument document;
-    public PDFGenerator (ArrayList<BufferedImage> arrlist) throws Exception {
-		doIt(arrlist);
+    private static int IMAGE_SPACER = 50;
+    private PDDocument finalPuzzle;
+    private int maxY;
+    private int maxX;
+    private int x;
+    private int y;
+    private boolean newPage = false;
+    public PDFGenerator (ArrayList<BufferedImage> arrlist) {
+        try {
+            createPuzzle(arrlist);
+        } catch (Exception e) {
+            System.out.println("Could Not Create Puzzle");
+            e.printStackTrace();
+        }
 	}
-	private void doIt(ArrayList<BufferedImage> arrList) throws Exception {
-		// Create a document and add a page to it
+	private void createPuzzle(ArrayList<BufferedImage> arrList) throws Exception {
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage();
 		document.addPage(page);
-		// Start a new content stream which will "hold" the to be created content
 		PDPageContentStream contentStream = new PDPageContentStream(document, page);
+        maxX = (int) page.getMediaBox().getUpperRightX();
+        maxY = (int) page.getMediaBox().getUpperRightY();
+        System.out.println("maxX: " + maxX + " maxY: " + maxY);
+        x = IMAGE_SPACER;
+        y = (int) page.getMediaBox().getUpperRightY() - IMAGE_SPACER;
 		for (int i = 0; i < arrList.size(); i++) {
-			     try {
-			    	 	BufferedImage img = arrList.get(i);
-			            PDXObjectImage ximage = new PDPixelMap(document, img);
-			            float scale = 1.0f; // alter this value to set the image size
-                        contentStream.drawXObject(ximage, 50, 50, ximage.getWidth()*scale, ximage.getHeight()*scale);
-                        contentStream.close();
-                        PDPage nPage = new PDPage();
-                        document.addPage(nPage);
-                        contentStream = new PDPageContentStream(document, nPage);
-			        } catch (FileNotFoundException fnfex) {
-			            System.out.println("No image for you");
-			        }
+             try {
+                 BufferedImage img = arrList.get(i);
+                 PDXObjectImage ximage = new PDPixelMap(document, img);
+                 float scale = 1.0f;
+                 contentStream.drawXObject(ximage, x, y, ximage.getWidth()*scale, ximage.getHeight()*scale);
+                 System.out.println("X: " + x + " Y: " + y);
+                 newXYPoints(ximage.getWidth(), ximage.getHeight());
+                 if (newPage) {
+                     contentStream.close();
+                     PDPage nPage = new PDPage();
+                     document.addPage(nPage);
+                     contentStream = new PDPageContentStream(document, nPage);
+                     newPage = false;
+                 }
+             } catch (FileNotFoundException fnfex) {
+                 System.out.println("No image for you");
+             }
 		}
-
-		// Make sure that the content stream is closed:
 		contentStream.close();
-		// Save the results and ensure that the document is properly closed:
-		document.save( "Hello World.pdf");
-		document.close();
+        this.finalPuzzle = document;
 	}
-    public PDDocument getDocument() {
-        return document;
+    private boolean newXYPoints(int width, int height) {
+        int newX = x + width + IMAGE_SPACER;
+        int newY = y;
+        if (!checkXBounds(newX, width)) {
+            newY = y - height - IMAGE_SPACER;
+            newX = IMAGE_SPACER;
+            if (!checkYBounds(newY, height)) {
+                newPage = true;
+                newX = IMAGE_SPACER;
+                newY = maxY - IMAGE_SPACER;
+            }
+            if (!checkXBounds(newX, width)) {
+                System.out.println("Image Will not fit on page");
+                //Handle puzzle size to big
+            }
+        }
+        x = newX;
+        y = newY;
+        return true;
     }
-    public void setDocument(PDDocument document) {
-        this.document = document;
+    private boolean checkXBounds(int x, int width) {
+        if ((x+width) > maxX) {
+            return false;
+        }
+        return true;
+    }
+    private boolean checkYBounds(int y, int height) {
+        if ((y-height) < 0) {
+            return false;
+        }
+        return true;
+    }
+    public PDDocument getfinalPuzzle() {
+        return finalPuzzle;
+    }
+    public void setfinalPuzzle(PDDocument document) {
+        this.finalPuzzle = document;
     }
 
 }

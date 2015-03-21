@@ -35,15 +35,15 @@ public class TestClient {
                 Socket socket = new Socket(hostName, portNumber);
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 OutputStream outputStream = socket.getOutputStream();
-                InputStream is = socket.getInputStream();
+                InputStream is = socket.getInputStream()
         ) {
             String userInput = pd.toString();
             out.println(userInput);
             ImageIO.write(pd.getImage(), pd.getImgTail(), outputStream);
+            outputStream.flush();
+            //somehow receive the puzzle WIP
             PDDocument document = new PDDocument();
-            while ((document.load(is) != null)) {
-                System.out.println("im herererererer");
-            }
+            document.load(is);
             document.save(new File("savedPDF.pdf"));
             document.close();
             socket.close();
