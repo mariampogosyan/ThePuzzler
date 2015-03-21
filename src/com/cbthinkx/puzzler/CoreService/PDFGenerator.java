@@ -45,7 +45,10 @@ public class PDFGenerator {
                  contentStream.drawXObject(ximage, x, y, ximage.getWidth()*scale, ximage.getHeight()*scale);
                  System.out.println("X: " + x + " Y: " + y);
                  y = y + ximage.getHeight();
-                 newXYPoints(ximage.getWidth(), ximage.getHeight());
+                 if (!newXYPoints(ximage.getWidth(), ximage.getHeight())) {
+                     System.out.println("IMAGE IS TOO BIG THROW ERROR");
+                     throw new Exception("Image is too big");
+                 }
                  if (newPage) {
                      contentStream.close();
                      PDPage nPage = new PDPage();
@@ -55,6 +58,9 @@ public class PDFGenerator {
                  }
              } catch (FileNotFoundException fnfex) {
                  System.out.println("No image for you");
+             } catch (Exception e) {
+                 e.printStackTrace();
+                 break;
              }
 		}
 		contentStream.close();
@@ -73,6 +79,7 @@ public class PDFGenerator {
             }
             if (!checkXBounds(newX, width)) {
                 System.out.println("Image Will not fit on page");
+                return false;
                 //Handle puzzle size to big
             }
         }

@@ -29,7 +29,7 @@ public class Square {
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
                 PuzzleShape.SQUARE,
-                PuzzleSkill.ADULT,
+                PuzzleSkill.BABY,
                 PuzzleType.ONESIDED,
                 orig,
                 "jpg",
