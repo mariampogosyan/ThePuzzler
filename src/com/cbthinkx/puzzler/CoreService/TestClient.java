@@ -1,5 +1,8 @@
 package com.cbthinkx.puzzler.CoreService;
 
+import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.pdmodel.PDDocument;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -31,11 +34,18 @@ public class TestClient {
         try (
                 Socket socket = new Socket(hostName, portNumber);
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                OutputStream outputStream = socket.getOutputStream()
+                OutputStream outputStream = socket.getOutputStream();
+                InputStream is = socket.getInputStream();
         ) {
             String userInput = pd.toString();
             out.println(userInput);
             ImageIO.write(pd.getImage(), pd.getImgTail(), outputStream);
+            PDDocument document = new PDDocument();
+            while ((document.load(is) != null)) {
+                System.out.println("im herererererer");
+            }
+            document.save(new File("savedPDF.pdf"));
+            document.close();
             socket.close();
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
@@ -44,6 +54,8 @@ public class TestClient {
             System.err.println("Couldn't get I/O for the connection to " +
                     hostName);
             System.exit(1);
+        } catch (COSVisitorException e) {
+            e.printStackTrace();
         }
     }
 }

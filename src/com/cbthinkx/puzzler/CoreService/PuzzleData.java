@@ -83,7 +83,6 @@ public class PuzzleData {
         this.skill = PuzzleSkill.valueOf((int)(vals[3]));
         this.type = PuzzleType.valueOf((int)(vals[4]));
         this.imgTail = imageTailString(data);
-        System.out.println(imgTail);
     }
     public PuzzleData() {
 
