@@ -11,9 +11,9 @@ public class ImageUtility {
     public BufferedImage newImage (double size, PuzzleShape pShape, BufferedImage img) {
         img = cropImage(img, pShape);
         double[] dim = getDimensionsFromDiagnal(size, img.getHeight(), img.getWidth());
-        BufferedImage newImg = new BufferedImage((int)dim[0], (int)dim[1], BufferedImage.TYPE_INT_ARGB);
+        BufferedImage newImg = new BufferedImage((int)dim[0], (int)dim[1], img.getType());
         AffineTransform at = new AffineTransform();
-        at.scale(1, 1);
+        at.scale(dim[2], dim[2]);
         AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
         BufferedImage image = scaleOp.filter(img, newImg);
         try {

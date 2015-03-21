@@ -15,7 +15,7 @@ public class PuzzleData {
     private String imgTail;
 
     public double getSize() {
-        return size;
+        return size*72;
     }
     public void setSize(double size) {
         this.size = size;

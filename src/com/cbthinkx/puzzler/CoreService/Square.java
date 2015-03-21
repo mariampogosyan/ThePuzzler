@@ -22,7 +22,7 @@ public class Square {
     public static void main(String[] sa) {
         BufferedImage orig = null;
         try {
-            orig = ImageIO.read(new File("res/test.jpg"));
+            orig = ImageIO.read(new File("res/puzzle.jpg"));
         } catch (Exception e) {
 
         }
@@ -47,8 +47,8 @@ public class Square {
     }
 	public Square (PuzzleData pd) {
 		this.pd = pd;
-//		nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), pd.getImage());
-        nImage = this.pd.getImage();
+	//	nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), this.pd.getImage());
+		nImage = this.pd.getImage();
 		height = nImage.getHeight();
 		width = nImage.getWidth();	
 		switch(pd.getSkill()) {
