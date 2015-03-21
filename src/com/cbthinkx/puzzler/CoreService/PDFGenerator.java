@@ -11,7 +11,8 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 
 public class PDFGenerator {
-	public PDFGenerator (ArrayList<BufferedImage> arrlist) throws Exception {
+    private PDDocument document;
+    public PDFGenerator (ArrayList<BufferedImage> arrlist) throws Exception {
 		doIt(arrlist);
 	}
 	private void doIt(ArrayList<BufferedImage> arrList) throws Exception {
@@ -42,5 +43,11 @@ public class PDFGenerator {
 		document.save( "Hello World.pdf");
 		document.close();
 	}
+    public PDDocument getDocument() {
+        return document;
+    }
+    public void setDocument(PDDocument document) {
+        this.document = document;
+    }
 
 }

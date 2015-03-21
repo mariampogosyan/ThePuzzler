@@ -1,12 +1,14 @@
 package com.cbthinkx.puzzler.CoreService;
 
 
+import org.apache.pdfbox.pdfwriter.COSStandardOutputStream;
+import org.apache.pdfbox.pdmodel.PDDocument;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class Server {
     public static void main(String[] args) throws IOException {
@@ -53,9 +55,23 @@ public class Server {
                 pd = new PuzzleData(data, image);
                 System.out.println(pd.toString());
 
-                if (pd.getShapeType() == PieceShape.SQUARE) {
-                	new Square(pd);
+                switch(pd.getShapeType()) {
+                    case SQUARE: {
+                        Square sq = new Square(pd);
+                        PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
+                        System.out.println("ITS HERERERERE");
+                        new Thread(
+                                () -> handleOutPut(ss, pdfGen.getDocument())
+                        ).start();
+                        break;
+                    }
+                    case JIGSAW: {
+                        break;
+                    }
+                    default:
+                        break;
                 }
+
                 //should decided weather to send to jigsaw or square
                 //
                 //should get back a pdf
@@ -69,9 +85,15 @@ public class Server {
                 return;
             }
         }
-        public void handleOutPut(Socket ss) {
-            //should also take in a pdf
-            //send back PDF after generated
+        public void handleOutPut(Socket ss, PDDocument puzzle) {
+            System.out.println("getToOutPut");
+            try {
+                COSStandardOutputStream outStream = new COSStandardOutputStream(ss.getOutputStream());
+                puzzle.save(outStream);
+                ss.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
