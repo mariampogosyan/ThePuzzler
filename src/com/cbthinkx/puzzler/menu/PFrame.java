@@ -56,17 +56,12 @@ public class PFrame extends JFrame {
         try (
                 Socket socket = new Socket(hostName, portNumber);
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                OutputStream outputStream = socket.getOutputStream();
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()
+                OutputStream outputStream = socket.getOutputStream()
         ) {
-            out.println(getData().toString());
-            ImageIO.write(getData().getImage(), getData().getImgTail(), byteArrayOutputStream);
-            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-            outputStream.write(size);
-            outputStream.write(byteArrayOutputStream.toByteArray());
-            outputStream.flush();
-            System.out.println("Flushed: " + System.currentTimeMillis());
-            System.out.println("Closing: " + System.currentTimeMillis());
+            String userInput = getData().toString();
+            out.println(userInput);
+            ImageIO.write(getData().getImage(), getData().getImgTail(), outputStream);
+            socket.close();
             //wait for pdf to be returned
             //
             //
