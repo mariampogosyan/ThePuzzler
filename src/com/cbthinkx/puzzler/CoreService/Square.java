@@ -10,13 +10,19 @@ public class Square {
 	PuzzleData pd;
 	BufferedImage image;
 	BufferedImage nImage;
-	ArrayList<BufferedImage> pieces = new ArrayList<>();
+    private ArrayList<BufferedImage> pieces = new ArrayList<>();
 	int width;
 	int height;
+    public ArrayList<BufferedImage> getPieces() {
+        return pieces;
+    }
+    public void setPieces(ArrayList<BufferedImage> pieces) {
+        this.pieces = pieces;
+    }
     public static void main(String[] sa) {
         BufferedImage orig = null;
         try {
-            orig = ImageIO.read(new File("res/puzzle.jpg"));
+            orig = ImageIO.read(new File("res/test.jpg"));
         } catch (Exception e) {
 
         }
@@ -26,7 +32,7 @@ public class Square {
                 PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,
                 orig,
-                "",
+                "JPG",
                 20.0
         );
         new Square(pd);
@@ -61,11 +67,6 @@ public class Square {
 				pieces.add(image);
 			}
        }
-        try {
-            new PDFGenerator(pieces);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 	}
 	public void child() {
 		for (int i = 0; i < 5; i++) {
@@ -74,11 +75,6 @@ public class Square {
 				pieces.add(image);
 			}
        }
-        try {
-            new PDFGenerator(pieces);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 	}
 	public void adult() {
 		for (int i = 0; i < 7; i++) {
@@ -87,10 +83,5 @@ public class Square {
 				pieces.add(image);
 			}
        }
-        try {
-            new PDFGenerator(pieces);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 	}
 }

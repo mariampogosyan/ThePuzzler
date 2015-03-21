@@ -61,7 +61,6 @@ public class PFrame extends JFrame {
             String userInput = getData().toString();
             out.println(userInput);
             ImageIO.write(getData().getImage(), getData().getImgTail(), outputStream);
-            socket.close();
             //wait for pdf to be returned
             //
             //
