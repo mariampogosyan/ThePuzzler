@@ -1,6 +1,5 @@
 package com.cbthinkx.puzzler.CoreService;
 
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -49,12 +48,7 @@ public class Server {
                     break;
                 }
                 pd = new PuzzleData(data, null);
-                byte[] sizeAr = new byte[4];
-                is.read(sizeAr);
-                int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-                byte[] imageAr = new byte[size];
-                is.read(imageAr);
-                BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+                BufferedImage image = ImageIO.read(is);
                 ImageIO.write(image, pd.getImgTail(), new File("RecievedImage." + pd.getImgTail()));
                 pd = new PuzzleData(data, image);
                 System.out.println(pd.toString());

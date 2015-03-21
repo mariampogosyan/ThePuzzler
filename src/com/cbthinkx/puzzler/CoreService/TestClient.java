@@ -21,7 +21,7 @@ public class TestClient {
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
                 PuzzleShape.SQUARE,
-                PuzzleSkill.ADULT,
+                PuzzleSkill.BABY,
                 PuzzleType.ONESIDED,
                 orig,
                 "jpg",
@@ -35,14 +35,7 @@ public class TestClient {
         ) {
             String userInput = pd.toString();
             out.println(userInput);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageIO.write(pd.getImage(), pd.getImgTail(), byteArrayOutputStream);
-            byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-            outputStream.write(size);
-            outputStream.write(byteArrayOutputStream.toByteArray());
-            outputStream.flush();
-            System.out.println("Flushed: " + System.currentTimeMillis());
-            System.out.println("Closing: " + System.currentTimeMillis());
+            ImageIO.write(pd.getImage(), pd.getImgTail(), outputStream);
             socket.close();
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
