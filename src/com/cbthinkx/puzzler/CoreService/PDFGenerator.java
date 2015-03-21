@@ -41,8 +41,10 @@ public class PDFGenerator {
                  BufferedImage img = arrList.get(i);
                  PDXObjectImage ximage = new PDPixelMap(document, img);
                  float scale = 1.0f;
+                 y = y - ximage.getHeight();
                  contentStream.drawXObject(ximage, x, y, ximage.getWidth()*scale, ximage.getHeight()*scale);
                  System.out.println("X: " + x + " Y: " + y);
+                 y = y + ximage.getHeight();
                  newXYPoints(ximage.getWidth(), ximage.getHeight());
                  if (newPage) {
                      contentStream.close();
@@ -59,10 +61,10 @@ public class PDFGenerator {
         this.finalPuzzle = document;
 	}
     private boolean newXYPoints(int width, int height) {
-        int newX = x + width + IMAGE_SPACER;
+        int newX = x + (width) + IMAGE_SPACER;
         int newY = y;
         if (!checkXBounds(newX, width)) {
-            newY = y - height - IMAGE_SPACER;
+            newY = y - (height) - IMAGE_SPACER;
             newX = IMAGE_SPACER;
             if (!checkYBounds(newY, height)) {
                 newPage = true;

@@ -22,14 +22,14 @@ public class Square {
     public static void main(String[] sa) {
         BufferedImage orig = null;
         try {
-            orig = ImageIO.read(new File("res/puzzle.jpg"));
+            orig = ImageIO.read(new File("res/test.jpg"));
         } catch (Exception e) {
 
         }
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
                 PuzzleShape.SQUARE,
-                PuzzleSkill.BABY,
+                PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,
                 orig,
                 "jpg",
