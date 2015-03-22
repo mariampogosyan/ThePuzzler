@@ -29,11 +29,11 @@ public class Square {
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
                 PuzzleShape.SQUARE,
-                PuzzleSkill.ADULT,
+                PuzzleSkill.BABY,
                 PuzzleType.ONESIDED,
                 orig,
                 "jpg",
-                30.0
+                10.0
         );
         Square sp = new Square(pd);
         System.out.println(sp.getPieces().size());

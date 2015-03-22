@@ -3,6 +3,7 @@ package com.cbthinkx.puzzler.CoreService;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -27,6 +28,7 @@ public class PDFGenerator {
         }
 	}
 	private void createPuzzle(ArrayList<BufferedImage> arrList) throws Exception {
+		//Collections.shuffle(arrList);
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage();
 		document.addPage(page);

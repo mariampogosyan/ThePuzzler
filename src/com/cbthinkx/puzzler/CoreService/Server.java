@@ -4,6 +4,7 @@ package com.cbthinkx.puzzler.CoreService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
@@ -56,9 +57,15 @@ public class Server {
                     case SQUARE: {
                         Square sq = new Square(pd);
                         PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
-                        new Thread(
+                        System.out.println(pdfGen.getfinalPuzzle().getNumberOfPages());
+                       /* new Thread(
                                 () -> handleOutPut(socket, pdfGen.getfinalPuzzle())
-                        ).start();
+                        ).start();*/
+//                        try {
+//                            pdfGen.getfinalPuzzle().save(new File("goodPDF.pdf"));
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
                         break;
                     }
                     case JIGSAW: {
