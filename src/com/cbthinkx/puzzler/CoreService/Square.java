@@ -29,11 +29,11 @@ public class Square {
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
                 PuzzleShape.SQUARE,
-                PuzzleSkill.BABY,
+                PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,
                 orig,
                 "jpg",
-                20.0
+                30.0
         );
         Square sp = new Square(pd);
         System.out.println(sp.getPieces().size());
@@ -47,8 +47,8 @@ public class Square {
     }
 	public Square (PuzzleData pd) {
 		this.pd = pd;
-	//	nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), this.pd.getImage());
-		nImage = this.pd.getImage();
+		nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), this.pd.getImage());
+//		nImage = this.pd.getImage();
 		height = nImage.getHeight();
 		width = nImage.getWidth();	
 		switch(pd.getSkill()) {
