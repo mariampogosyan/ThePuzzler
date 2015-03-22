@@ -58,14 +58,9 @@ public class Server {
                         Square sq = new Square(pd);
                         PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
                         System.out.println(pdfGen.getfinalPuzzle().getNumberOfPages());
-                       /* new Thread(
+                        new Thread(
                                 () -> handleOutPut(socket, pdfGen.getfinalPuzzle())
-                        ).start();*/
-//                        try {
-//                            pdfGen.getfinalPuzzle().save(new File("goodPDF.pdf"));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
+                        ).start();
                         break;
                     }
                     case JIGSAW: {
