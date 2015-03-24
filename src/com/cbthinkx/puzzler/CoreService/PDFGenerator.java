@@ -28,7 +28,7 @@ public class PDFGenerator {
         }
 	}
 	private void createPuzzle(ArrayList<BufferedImage> arrList) throws Exception {
-		//Collections.shuffle(arrList);
+		Collections.shuffle(arrList);
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage();
 		document.addPage(page);

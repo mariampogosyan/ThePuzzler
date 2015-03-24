@@ -57,10 +57,10 @@ public class Server {
                     case SQUARE: {
                         Square sq = new Square(pd);
                         PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
-                        System.out.println(pdfGen.getfinalPuzzle().getNumberOfPages());
-                        new Thread(
-                                () -> handleOutPut(socket, pdfGen.getfinalPuzzle())
-                        ).start();
+                        pdfGen.getfinalPuzzle().save(new File("pdfFinale.pdf"));
+//                        new Thread(
+//                                () -> handleOutPut(socket, pdfGen.getfinalPuzzle())
+//                        ).start();
                         break;
                     }
                     case JIGSAW: {
