@@ -40,7 +40,7 @@ public class Square {
         PDFGenerator pdfg = new PDFGenerator(sp.getPieces());
         System.out.println(pdfg.getfinalPuzzle().getNumberOfPages());
         try {
-            pdfg.getfinalPuzzle().save(new File("goodPDF.pdf"));
+            pdfg.getfinalPuzzle().save(new File("squarePDF.pdf"));
         } catch (Exception e) {
             e.printStackTrace();
         }

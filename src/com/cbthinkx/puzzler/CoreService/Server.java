@@ -51,13 +51,13 @@ public class Server {
                 }
                 pd = new PuzzleData(data, null);
                 BufferedImage image = ImageIO.read(is);
-                ImageIO.write(image, pd.getImgTail(), new File("RecievedImage." + pd.getImgTail()));
+                ImageIO.write(image, pd.getImgTail(), new File("RecievedImageServer." + pd.getImgTail()));
                 pd = new PuzzleData(data, image);
                 switch(pd.getShapeType()) {
                     case SQUARE: {
                         Square sq = new Square(pd);
                         PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
-                        pdfGen.getfinalPuzzle().save(new File("pdfFinale.pdf"));
+                        pdfGen.getfinalPuzzle().save(new File("FinalePDF.pdf"));
 //                        new Thread(
 //                                () -> handleOutPut(socket, pdfGen.getfinalPuzzle())
 //                        ).start();

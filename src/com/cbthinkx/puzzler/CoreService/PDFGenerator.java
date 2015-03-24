@@ -48,7 +48,6 @@ public class PDFGenerator {
                  System.out.println("X: " + x + " Y: " + y);
                  y = y + ximage.getHeight();
                  if (!newXYPoints(ximage.getWidth(), ximage.getHeight())) {
-                     System.out.println("IMAGE IS TOO BIG THROW ERROR");
                      throw new Exception("Image is too big");
                  }
                  if (newPage) {

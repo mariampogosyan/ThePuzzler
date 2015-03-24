@@ -44,7 +44,7 @@ public class TestClient {
             //somehow receive the puzzle WIP
             PDDocument document = new PDDocument();
             document.load(is);
-            document.save(new File("savedPDF.pdf"));
+            document.save(new File("recievedPDF.pdf"));
             document.close();
             socket.close();
         } catch (UnknownHostException e) {
