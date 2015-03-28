@@ -1,6 +1,8 @@
 package com.cbthinkx.puzzler.CoreService;
 
 
+import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.pdfwriter.COSStandardOutputStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.imageio.ImageIO;
@@ -17,7 +19,6 @@ public class Server {
     public void doit(int portNumber) {
         try {
             boolean done = false;
-//            new MasterThread().start();
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Server started successfully");
             while (!done) {
@@ -58,9 +59,10 @@ public class Server {
                         Square sq = new Square(pd);
                         PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
                         pdfGen.getfinalPuzzle().save(new File("FinalePDF.pdf"));
-//                        new Thread(
-//                                () -> handleOutPut(socket, pdfGen.getfinalPuzzle())
-//                        ).start();
+                        new Thread(
+                                () -> handleOutPut(socket, pdfGen.getfinalPuzzle())
+                        ).start();
+                        pdfGen.getfinalPuzzle().close();
                         break;
                     }
                     case JIGSAW: {
@@ -76,10 +78,10 @@ public class Server {
             }
         }
         public void handleOutPut(Socket ss, PDDocument puzzle) {
-            System.out.println("getToOutPut");
             try {
-                // send the puzzle yeaaaa
-            } catch (Exception e) {
+                PrintStream ps = new PrintStream(ss.getOutputStream(), true);
+                ps.println("Sending Puzzle");
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

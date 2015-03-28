@@ -1,60 +1,73 @@
 package com.cbthinkx.puzzler.CoreService;
 
-import org.apache.pdfbox.exceptions.COSVisitorException;
-import org.apache.pdfbox.pdmodel.PDDocument;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 
-public class TestClient {
+public class TestClient extends Thread {
     public static void main(String[] args) throws IOException {
         new TestClient().doit("localhost", 25565);
     }
     public void doit(String hostName, int portNumber){
         BufferedImage orig = null;
         try {
-            orig = ImageIO.read(new File("res/puzzle.jpg"));
+            orig = ImageIO.read(new File("res/test.jpg"));
         } catch (Exception e) {
 
         }
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
                 PuzzleShape.SQUARE,
-                PuzzleSkill.BABY,
+                PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,
                 orig,
                 "jpg",
-                20.0
+                5.0
         );
-
         try (
                 Socket socket = new Socket(hostName, portNumber);
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                OutputStream outputStream = socket.getOutputStream();
-                InputStream is = socket.getInputStream()
+        ) {
+            Thread outPutThread = new Thread(
+                    () -> doOutput(socket, pd)
+            );
+            outPutThread.start();
+            while (outPutThread.isAlive());
+            System.out.println("done sending");
+            System.out.println(socket.isConnected());
+            doInput(socket);
+            socket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void run() {
+
+    }
+    private void doOutput(Socket ss, PuzzleData pd) {
+        try (
+                OutputStream outputStream = ss.getOutputStream();
+                PrintWriter out = new PrintWriter(ss.getOutputStream(), true);
         ) {
             String userInput = pd.toString();
             out.println(userInput);
             ImageIO.write(pd.getImage(), pd.getImgTail(), outputStream);
-            outputStream.flush();
-            //somehow receive the puzzle WIP
-            PDDocument document = new PDDocument();
-            document.load(is);
-            document.save(new File("recievedPDF.pdf"));
-            document.close();
-            socket.close();
-        } catch (UnknownHostException e) {
-            System.err.println("Don't know about host " + hostName);
-            System.exit(1);
-        } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to " +
-                    hostName);
-            System.exit(1);
-        } catch (COSVisitorException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void doInput(Socket ss) {
+        System.out.println(ss.isConnected());
+        try (
+                InputStream inputStream = ss.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        ) {
+            String input;
+            while ((input = bufferedReader.readLine()) != null) {
+                System.out.println(input);
+            }
+            System.out.println(ss.isConnected());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
