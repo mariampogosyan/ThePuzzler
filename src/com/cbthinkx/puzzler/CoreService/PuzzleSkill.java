@@ -1,7 +1,7 @@
 package com.cbthinkx.puzzler.CoreService;
 
 public enum PuzzleSkill {
-    BABY(1), CHILD(2), ADULT(3);
+    BABY(144), CHILD(108), ADULT(72);
     private  final int val;
     PuzzleSkill (int i) {
         this.val = i;

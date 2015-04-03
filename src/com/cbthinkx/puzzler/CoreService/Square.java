@@ -13,6 +13,9 @@ public class Square {
     private ArrayList<BufferedImage> pieces = new ArrayList<>();
 	int width;
 	int height;
+	int npw;
+	int nph;
+
     public ArrayList<BufferedImage> getPieces() {
         return pieces;
     }
@@ -29,7 +32,7 @@ public class Square {
         PuzzleData pd = new PuzzleData(
                 PieceShape.SQUARE,
                 PuzzleShape.SQUARE,
-                PuzzleSkill.BABY,
+                PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,
                 orig,
                 "jpg",
@@ -41,6 +44,7 @@ public class Square {
         System.out.println(pdfg.getfinalPuzzle().getNumberOfPages());
         try {
             pdfg.getfinalPuzzle().save(new File("squarePDF.pdf"));
+            pdfg.getfinalPuzzle().close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,48 +52,25 @@ public class Square {
 	public Square (PuzzleData pd) {
 		this.pd = pd;
 		nImage = new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), this.pd.getImage());
-//		nImage = this.pd.getImage();
 		height = nImage.getHeight();
 		width = nImage.getWidth();	
-		switch(pd.getSkill()) {
-		case BABY: {
-			baby();
-			break;
-		}
-		case CHILD: {
-			child();
-			break;
-		}
-		case ADULT: {
-			adult();
-			break;
-		}
-		default:
-			break;
-		}
+		squareIt();
 	}
-	public void baby() {
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 2; j++) {
-				image = nImage.getSubimage(j * width / 2, i * height / 2, width / 2, height / 2) ;                               
+	public void squareIt() {
+		npw = (int)(width/pd.getSkill().getVal());
+		nph = (int)(height/pd.getSkill().getVal());
+		
+		for (int i = 0; i < nph; i++) {
+			for (int j = 0; j < npw; j++) {
+				image = nImage.getSubimage(j * width / npw, i * height / nph, width / npw, height / nph) ;                               
 				pieces.add(image);
 			}
        }
 	}
-	public void child() {
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-				image = nImage.getSubimage(j * width / 5, i * height / 5, width / 5, height / 5) ;                               
-				pieces.add(image);
-			}
-       }
+	public int getPWidth() {
+		return  width/npw;
 	}
-	public void adult() {
-		for (int i = 0; i < 7; i++) {
-			for (int j = 0; j < 7; j++) {
-				image = nImage.getSubimage(j * width / 7, i * height / 7, width / 7, height / 7) ;                               
-				pieces.add(image);
-			}
-       }
+	public int getPHeight() {
+		return  height/nph;
 	}
 }
