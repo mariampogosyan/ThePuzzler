@@ -1,7 +1,6 @@
 package com.cbthinkx.puzzler.CoreService;
 
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
 import java.util.regex.Pattern;
 
 public class PuzzleData {

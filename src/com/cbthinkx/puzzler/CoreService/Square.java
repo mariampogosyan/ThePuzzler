@@ -74,4 +74,10 @@ public class Square {
 	public int getPHeight() {
 		return  height/nph;
 	}
+	public int getNpw() {
+		return npw;		
+	}
+	public int getNph() {
+		return nph;
+	}
 }
