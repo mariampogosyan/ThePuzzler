@@ -29,7 +29,7 @@ public class ImageUtility {
         return image;
     }
 
-    private double[] getDimensionsFromDiagnal (double dia, double height, double width) {
+    private double[] getDimensionsFromDiagnal(double dia, double height, double width) {
         double[] dim = new double[3];
         double dia2 = Math.sqrt((height * height) + (width * width));
         double k = dia/dia2;

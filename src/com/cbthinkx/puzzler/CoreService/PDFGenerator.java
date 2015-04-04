@@ -19,7 +19,7 @@ public class PDFGenerator {
     private int x;
     private int y;
     private boolean newPage = false;
-    public PDFGenerator (ArrayList<BufferedImage> arrlist) {
+    public PDFGenerator (ArrayList<PieceNode> arrlist) {
         try {
             createPuzzle(arrlist);
         } catch (Exception e) {
@@ -27,7 +27,7 @@ public class PDFGenerator {
             e.printStackTrace();
         }
 	}
-	private void createPuzzle(ArrayList<BufferedImage> arrList) throws Exception {
+	private void createPuzzle(ArrayList<PieceNode> arrList) throws Exception {
 		Collections.shuffle(arrList);
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage();
@@ -40,7 +40,7 @@ public class PDFGenerator {
         y = (int) page.getMediaBox().getUpperRightY() - IMAGE_SPACER;
 		for (int i = 0; i < arrList.size(); i++) {
              try {
-                 BufferedImage img = arrList.get(i);
+                 BufferedImage img = arrList.get(i).getBi();
                  PDXObjectImage ximage = new PDPixelMap(document, img);
                  float scale = 1.0f;
                  y = y - ximage.getHeight();

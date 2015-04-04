@@ -10,16 +10,16 @@ public class Square {
 	PuzzleData pd;
 	BufferedImage image;
 	BufferedImage nImage;
-    private ArrayList<BufferedImage> pieces = new ArrayList<>();
+    private ArrayList<PieceNode> pieces = new ArrayList<>();
 	int width;
 	int height;
 	int npw;
 	int nph;
 
-    public ArrayList<BufferedImage> getPieces() {
+    public ArrayList<PieceNode> getPieces() {
         return pieces;
     }
-    public void setPieces(ArrayList<BufferedImage> pieces) {
+    public void setPieces(ArrayList<PieceNode> pieces) {
         this.pieces = pieces;
     }
     public static void main(String[] sa) {
@@ -57,13 +57,14 @@ public class Square {
 		squareIt();
 	}
 	public void squareIt() {
-		npw = (int)(width/pd.getSkill().getVal());
-		nph = (int)(height/pd.getSkill().getVal());
+		npw = (width/pd.getSkill().getVal());
+		nph = (height/pd.getSkill().getVal());
 		
 		for (int i = 0; i < nph; i++) {
 			for (int j = 0; j < npw; j++) {
-				image = nImage.getSubimage(j * width / npw, i * height / nph, width / npw, height / nph) ;                               
-				pieces.add(image);
+				image = nImage.getSubimage(j * width / npw, i * height / nph, width / npw, height / nph);
+				PieceNode pn = new PieceNode(j, i, image);
+				pieces.add(pn);
 			}
        }
 	}
