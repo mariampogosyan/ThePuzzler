@@ -1,8 +1,9 @@
 package com.cbthinkx.puzzler.CoreService;
 
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 
-public class PieceNode {
+public class PieceNode implements Iterable{
 	private int x;
     private int y;
 	private BufferedImage bi;
@@ -35,4 +36,9 @@ public class PieceNode {
     public void setBi(BufferedImage bi) {
         this.bi = bi;
     }
+	@Override
+	public Iterator iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

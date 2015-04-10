@@ -26,10 +26,10 @@ public class PuzzleTree {
     }
 
     public PieceNode getBottomPiece(PieceNode pn) {
-        return null;
+    	return getPiece(pn.getX(), pn.getY()+1);
     }
     public PieceNode getRightPiece(PieceNode pn) {
-        return null;
+        return getPiece(pn.getX()+1, pn.getY());
     }
     private boolean checkBounds(int x, int y) {
     	if (x <= row && y <= column){
@@ -37,5 +37,46 @@ public class PuzzleTree {
     	} 
     	return false;
     }
-
+    private class PuzzleTreeIterator<PieceNode> implements java.util.Iterator<PieceNode> {
+    	private PuzzleTree ptlist;
+    	private com.cbthinkx.puzzler.CoreService.PieceNode current;
+    	public PuzzleTreeIterator(PuzzleTree ptlist) {
+    		this.ptlist = ptlist;
+    		this.current = ptlist.getPiece(0, 0);    		
+    	}
+		@Override
+		public boolean hasNext() {
+			if (!hasNextX() && !hasNextY()) {
+				return false;
+			}
+			return true;
+		}
+		private boolean hasNextX(){
+			if (current.getX() <= row) {
+				return true;
+			}
+			return false;			
+		}
+		private boolean hasNextY(){
+			if (current.getY() <= column){
+				return true;
+			}
+			return false;
+		}		
+		@Override
+		public PieceNode next() {
+			if (hasNext())	{
+				if (hasNextX()) {
+					current = ptlist.getPiece(current.getX()+1, current.getY());
+				} else {
+					if (hasNextY()) {
+						current = ptlist.getPiece(0, current.getY()+1);				
+					}
+				}
+			} else {
+				throw new java.util.NoSuchElementException();
+			}
+			return null;
+		}    	
+    }
 }
