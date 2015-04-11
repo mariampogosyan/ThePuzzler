@@ -24,10 +24,9 @@ public class UploadScreen extends Background{
     private String imgTail;
 	public UploadScreen(PFrame pf) {
 		super(pf);
-		JButton upld = new JButton("Chose the file");
+		JButton upld = new JButton("Choose a file");
 		upld.addActionListener(upload);
-
-		upld.setSize(100, 40);
+		upld.setSize(120, 40);
         upld.setLocation(
                 pf.getWidth() / 2 - upld.getWidth() / 2,
                 (int)(pf.getHeight() * 0.25)
@@ -36,11 +35,11 @@ public class UploadScreen extends Background{
 		diag = new JTextField();
 		diag.setSize(100, 40);
         diag.setLocation(
-                pf.getWidth() / 2 - upld.getWidth() / 2,
+                pf.getWidth() / 2 - diag.getWidth() / 2,
                 (int)(pf.getHeight() * 0.45)
         );
 		add(diag);
-		JButton next = new JButton("next");
+		JButton next = new JButton("Next");
 		next.addActionListener(nxt);
 		next.setSize(100, 40);
         next.setLocation(

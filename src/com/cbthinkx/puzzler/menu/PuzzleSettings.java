@@ -28,39 +28,47 @@ public class PuzzleSettings extends Background{
 		shape = new JComboBox<String>(shapes);
 		shape.setSize(200, 40);
 	    shape.setLocation(
-	    	pf.getWidth() / 2 - shape.getWidth() / 2,
-	    	(int)(pf.getHeight() * 0.1)
-        );
+				pf.getWidth() / 2 - shape.getWidth() / 2,
+				(int) (pf.getHeight() * 0.2)
+		);
 		add(shape);
 		puzzle = new JComboBox<String>(puzzles);
 		puzzle.setSize(200, 40);
 	    puzzle.setLocation(
-	    	pf.getWidth() / 2 - puzzle.getWidth() / 2,
-	        (int)(pf.getHeight() * 0.25)
-	    );
+				pf.getWidth() / 2 - puzzle.getWidth() / 2,
+				(int) (pf.getHeight() * 0.35)
+		);
 		add(puzzle);
 		skill = new JComboBox<String>(skills);
 		skill.setSize(200, 40);
 		skill.setLocation(
 				pf.getWidth() / 2 - skill.getWidth() / 2,
-	            (int)(pf.getHeight() * 0.4)
-	    );
+				(int) (pf.getHeight() * 0.5)
+		);
 		add(skill);
 		side = new JComboBox<String>(sides);
 		side.setSize(200, 40);
 		side.setLocation(
-			pf.getWidth() / 2 - side.getWidth() / 2,
-	        (int)(pf.getHeight() * 0.55)
-	    );
+				pf.getWidth() / 2 - side.getWidth() / 2,
+				(int) (pf.getHeight() * 0.65)
+		);
 	    add(side);
 		JButton doit = new JButton("Puzzle it!");
 		doit.setSize(200, 40);
 	    doit.setLocation(
-	    	pf.getWidth() / 2 - doit.getWidth() / 2 ,
-	        (int)(pf.getHeight() * 0.7)
-	    );
+				pf.getWidth() / 2 - doit.getWidth() / 2,
+				(int) (pf.getHeight() * 0.8)
+		);
 	    doit.addActionListener(pzzl);
 		add(doit);
+		JButton back = new JButton("Back");
+		back.setSize(100, 40);
+		back.setLocation(
+				(int) (pf.getWidth() * 0.05),
+				(int) (pf.getHeight() * 0.03)
+		);
+		back.addActionListener(bak);
+		add(back);
 		}
 	private ActionListener pzzl = ae -> {
 		if((shape.getSelectedIndex()==0) || (skill.getSelectedIndex()==0) || (puzzle.getSelectedIndex()==0) || (side.getSelectedIndex()==0)) {
@@ -73,6 +81,9 @@ public class PuzzleSettings extends Background{
             frame.sendPuzzle();
 			System.out.println(frame.getData().toString());
 		}
+	};
+	private ActionListener bak = ae -> {
+		frame.setView("upload");
 	};
 }
 
