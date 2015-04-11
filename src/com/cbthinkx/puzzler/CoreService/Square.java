@@ -39,7 +39,16 @@ public class Square {
                 10.0
         );
         Square sp = new Square(pd);
-        System.out.println(sp.getPieces().size());
+		System.out.println(sp.getPieces().size());
+		System.out.println("NPH: " + sp.getNph() + " NPW: " + sp.getNpw());
+		PuzzleTree pTree = new PuzzleTree(sp.getPieces(), sp.getNph(), sp.getNpw());
+		int c = 0;
+		for (Object x : pTree) {
+			PieceNode y = (PieceNode) x;
+			System.out.println("X: " + y.getX() + " Y: " + y.getY());
+			c++;
+		}
+		System.out.println("Count: " + c);
         PDFGenerator pdfg = new PDFGenerator(sp.getPieces());
         System.out.println(pdfg.getfinalPuzzle().getNumberOfPages());
         try {

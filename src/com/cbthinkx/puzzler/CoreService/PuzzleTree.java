@@ -2,7 +2,7 @@ package com.cbthinkx.puzzler.CoreService;
 
 import java.util.ArrayList;
 
-public class PuzzleTree {
+public class PuzzleTree implements Iterable {
     private ArrayList<PieceNode> arrList;
     private int row;
     private int column;
@@ -37,12 +37,16 @@ public class PuzzleTree {
     	} 
     	return false;
     }
-    private class PuzzleTreeIterator<PieceNode> implements java.util.Iterator<PieceNode> {
+	@Override
+	public java.util.Iterator<PieceNode> iterator() {
+		return new PuzzleTreeIterator<PieceNode>(this);
+	}
+    private class PuzzleTreeIterator<E> implements java.util.Iterator<PieceNode> {
     	private PuzzleTree ptlist;
-    	private com.cbthinkx.puzzler.CoreService.PieceNode current;
+    	private PieceNode current;
     	public PuzzleTreeIterator(PuzzleTree ptlist) {
     		this.ptlist = ptlist;
-    		this.current = ptlist.getPiece(0, 0);    		
+    		this.current = ptlist.getPiece(0,0);
     	}
 		@Override
 		public boolean hasNext() {
@@ -52,13 +56,13 @@ public class PuzzleTree {
 			return true;
 		}
 		private boolean hasNextX(){
-			if (current.getX() <= row) {
+			if (current.getX() + 1 < row) {
 				return true;
 			}
 			return false;			
 		}
 		private boolean hasNextY(){
-			if (current.getY() <= column){
+			if (current.getY() + 1 < column){
 				return true;
 			}
 			return false;
@@ -76,7 +80,7 @@ public class PuzzleTree {
 			} else {
 				throw new java.util.NoSuchElementException();
 			}
-			return null;
+			return current;
 		}    	
     }
 }
