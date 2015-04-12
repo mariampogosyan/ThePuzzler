@@ -12,6 +12,10 @@ public class PuzzleTree implements Iterable {
     	this.row = row;
     	this.column = column;
     }
+	@Override
+	public java.util.Iterator<PieceNode> iterator() {
+		return new PuzzleTreeIterator<PieceNode>(this);
+	}
     public PieceNode getPiece(int x, int y) throws java.util.NoSuchElementException {
     	if (checkBounds(x, y)) {
         	for (PieceNode pn : arrList) {
@@ -24,29 +28,28 @@ public class PuzzleTree implements Iterable {
     	}
 		return null;
     }
-
-    public PieceNode getBottomPiece(PieceNode pn) {
-    	return getPiece(pn.getX(), pn.getY()+1);
-    }
-    public PieceNode getRightPiece(PieceNode pn) {
-        return getPiece(pn.getX()+1, pn.getY());
-    }
     private boolean checkBounds(int x, int y) {
     	if (x <= row && y <= column){
     		return true;
     	} 
     	return false;
     }
-	@Override
-	public java.util.Iterator<PieceNode> iterator() {
-		return new PuzzleTreeIterator<PieceNode>(this);
+	public PieceNode getBottomPiece(PieceNode pn) {
+		return getPiece(pn.getX(), pn.getY() + 1);
 	}
+	public PieceNode getRightPiece(PieceNode pn) {
+		return getPiece(pn.getX() + 1, pn.getY());
+	}
+
     private class PuzzleTreeIterator<E> implements java.util.Iterator<PieceNode> {
     	private PuzzleTree ptlist;
-    	private PieceNode current;
+		private int x = -1;
+		private int y = 0;
+
     	public PuzzleTreeIterator(PuzzleTree ptlist) {
     		this.ptlist = ptlist;
-    		this.current = ptlist.getPiece(0,0);
+			this.x = -1;
+			this.y = 0;
     	}
 		@Override
 		public boolean hasNext() {
@@ -56,31 +59,32 @@ public class PuzzleTree implements Iterable {
 			return true;
 		}
 		private boolean hasNextX(){
-			if (current.getX() + 1 < row) {
+			if (x + 1 < row) {
 				return true;
 			}
 			return false;			
 		}
 		private boolean hasNextY(){
-			if (current.getY() + 1 < column){
+			if (y + 1 < column){
 				return true;
 			}
 			return false;
-		}		
+		}
 		@Override
 		public PieceNode next() {
 			if (hasNext())	{
 				if (hasNextX()) {
-					current = ptlist.getPiece(current.getX()+1, current.getY());
+					x++;
 				} else {
 					if (hasNextY()) {
-						current = ptlist.getPiece(0, current.getY()+1);				
+						x = 0;
+						y++;
 					}
 				}
 			} else {
 				throw new java.util.NoSuchElementException();
 			}
-			return current;
+			return ptlist.getPiece(x, y);
 		}    	
     }
 }
