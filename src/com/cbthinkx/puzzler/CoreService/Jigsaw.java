@@ -70,7 +70,7 @@ public class Jigsaw extends Square{
 		return fin;
 	}
 	private BufferedImage jigSawVertical(BufferedImage img, boolean isCur) {
-		BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());;
+		BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		if (isCur) {
 			Path2D p2d = new Path2D.Double();
 			p2d.moveTo(0, img.getHeight() / 2);
@@ -83,12 +83,13 @@ public class Jigsaw extends Square{
 			p2d.closePath();
 			Shape sp = p2d.createTransformedShape(null);
 			Graphics2D g2 = fin.createGraphics();
+			g2.setColor(new Color(0, true));
+			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
 			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-			g2.setColor(new Color(0.8509804f, 1.0f, 0.8235294f, 1.0f));
-			g2.fillRect(100, 0, img.getWidth(), img.getHeight());
-			g2.clip(sp);
+			g2.setColor(new Color(0, true));
+			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
+			g2.setClip(sp);
 			g2.drawImage(img, null, 0, 0);
-			g2.draw(sp);
 			g2.dispose();
 		}
 		return fin;

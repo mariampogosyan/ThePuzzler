@@ -56,7 +56,7 @@ public class PuzzleData {
         this.origImage = origImage;
     }
     public String getImgTail() {
-        return imgTail;
+        return "png";
     }
     public void setImgTail(String imgTail) {
         this.imgTail = imgTail;
