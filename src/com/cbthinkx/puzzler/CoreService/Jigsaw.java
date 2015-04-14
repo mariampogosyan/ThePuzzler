@@ -74,23 +74,30 @@ public class Jigsaw extends Square{
 		BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		if (isCur) {
 			AffineTransform tran = new AffineTransform();
-			tran.rotate(90);
+//			tran.rotate(Math.PI/2);
+			tran.translate(
+					img.getWidth() /256,
+					img.getHeight() / 2
+			);
+			tran.rotate(Math.PI/2);
+
+//			tran.translate(img.getWidth(), img.getHeight()/256);
 			Path2D p2d = new Path2D.Double();
-			p2d.moveTo(-img.getWidth(), 0);
+			p2d.moveTo(-img.getHeight() / 2, 0);
 			p2d.lineTo(0,0);
 			p2d = addCurvePath(img.getHeight() / 2, img.getWidth(), p2d);
 			p2d.lineTo(-img.getWidth(), -img.getHeight() / 2);
 			p2d.closePath();
-			p2d.transform(tran);
-			Shape sp = p2d.createTransformedShape(null);
+			//p2d.transform(tran);
+			Shape sp = p2d.createTransformedShape(tran);
 			Graphics2D g2 = fin.createGraphics();
 			g2.setColor(new Color(0, true));
 			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
 			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-			g2.setColor(Color.CYAN);
-			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
+//			g2.setColor(Color.CYAN);
+//			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
 			g2.setClip(sp);
-			g2.draw(sp);
+//			g2.draw(sp);
 			g2.drawImage(img, null, 0, 0);
 			g2.dispose();
 		}
