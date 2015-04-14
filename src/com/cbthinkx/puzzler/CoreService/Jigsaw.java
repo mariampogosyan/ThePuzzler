@@ -8,6 +8,7 @@ import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class Jigsaw extends Square{
 	private PuzzleTree pt;
@@ -72,23 +73,24 @@ public class Jigsaw extends Square{
 	private BufferedImage jigSawVertical(BufferedImage img, boolean isCur) {
 		BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		if (isCur) {
+			AffineTransform tran = new AffineTransform();
+			tran.rotate(90);
 			Path2D p2d = new Path2D.Double();
-			p2d.moveTo(0, img.getHeight() / 2);
-			p2d.lineTo(img.getWidth() * 0.35, img.getHeight() / 2);  //left arrow
-			p2d.lineTo(img.getWidth() * 0.45, img.getHeight() * 0.60);  //point
-			p2d.lineTo(img.getWidth() * 0.55, img.getHeight() / 2);  //right arrow
-			p2d.lineTo(img.getWidth(), img.getHeight() / 2);
-			p2d.lineTo(img.getWidth(), 0);
-			p2d.lineTo(0, 0);
+			p2d.moveTo(-img.getWidth(), 0);
+			p2d.lineTo(0,0);
+			p2d = addCurvePath(img.getHeight() / 2, img.getWidth(), p2d);
+			p2d.lineTo(-img.getWidth(), -img.getHeight() / 2);
 			p2d.closePath();
+			p2d.transform(tran);
 			Shape sp = p2d.createTransformedShape(null);
 			Graphics2D g2 = fin.createGraphics();
 			g2.setColor(new Color(0, true));
 			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
 			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-			g2.setColor(new Color(0, true));
+			g2.setColor(Color.CYAN);
 			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
 			g2.setClip(sp);
+			g2.draw(sp);
 			g2.drawImage(img, null, 0, 0);
 			g2.dispose();
 		}
@@ -97,7 +99,14 @@ public class Jigsaw extends Square{
 	private BufferedImage jigSawHorizontal(BufferedImage img, boolean isCur) {
 		return null;
 	}
-	private Path2D getCurvePath(int height, int width) {
-		return null;
+	private Path2D addCurvePath(int height, int width, Path2D p2dd) {
+		p2dd.lineTo(0.0, -4*height/9);
+		p2dd.lineTo(width/9, -4*height/9);
+		p2dd.lineTo(2 * width / 9, -3 * height / 9);
+		p2dd.curveTo(2 * width / 9, -3 * height / 9, 5 * width / 9, -5 * height / 9, 2 * width / 9, -7 * height / 9);
+		p2dd.lineTo(width/9, -6*height/9);
+		p2dd.lineTo(0.0, -6*height/9);
+		p2dd.lineTo(0.0, -height);
+		return p2dd;
 	}
 }

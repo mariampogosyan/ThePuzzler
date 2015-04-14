@@ -44,6 +44,7 @@ public class DrawPiece extends JFrame {
 				gat.scale(1.0, -1.0);
 				g2d.transform(gat);
 				Path2D.Double p2dd = new Path2D.Double();
+
 				p2dd.moveTo (0.0, 0.0);
 				p2dd.lineTo(0.0, -4*height/9);
 				p2dd.lineTo(width/9, -4*height/9);
@@ -51,13 +52,12 @@ public class DrawPiece extends JFrame {
 				p2dd.curveTo(2*width/9, -3*height/9, 5*width/9, -5*height/9, 2*width/9, -7*height/9);
 				p2dd.lineTo(width/9, -6*height/9);
 				p2dd.lineTo(0.0, -6*height/9);
-
-				
 				p2dd.lineTo(0.0, -height);
+
+
 				p2dd.lineTo(-width,-height);
 				p2dd.lineTo(-width, 0);
 				p2dd.closePath();
-				p2dd.moveTo (0.0, 0.0);
 				g2d.setStroke(new BasicStroke(4.5f));
 				g2d.draw(p2dd);
 	            g2d.dispose();
