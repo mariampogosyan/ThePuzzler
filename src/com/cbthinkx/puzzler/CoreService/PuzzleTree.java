@@ -1,5 +1,6 @@
 package com.cbthinkx.puzzler.CoreService;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class PuzzleTree implements Iterable {
@@ -29,7 +30,7 @@ public class PuzzleTree implements Iterable {
 		return null;
     }
     private boolean checkBounds(int x, int y) {
-    	if (x <= row && y <= column){
+    	if (x < row && y < column){
     		return true;
     	} 
     	return false;
@@ -39,6 +40,15 @@ public class PuzzleTree implements Iterable {
 	}
 	public PieceNode getRightPiece(PieceNode pn) {
 		return getPiece(pn.getX() + 1, pn.getY());
+	}
+	public void setBottomPiece(BufferedImage bi, PieceNode pn) {
+		getBottomPiece(pn).setBi(bi);
+	}
+	public void setRightPiece(BufferedImage bi, PieceNode pn) {
+		getRightPiece(pn).setBi(bi);
+	}
+	public ArrayList<PieceNode> getArrayList(){
+		return arrList;
 	}
 
     private class PuzzleTreeIterator<E> implements java.util.Iterator<PieceNode> {

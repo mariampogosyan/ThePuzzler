@@ -1,5 +1,7 @@
 package com.cbthinkx.puzzler.CoreService;
 
+import org.apache.pdfbox.exceptions.COSVisitorException;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -9,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class Jigsaw extends Square{
 	private PuzzleTree pt;
@@ -30,24 +33,36 @@ public class Jigsaw extends Square{
 				10.0
 		);
 		Jigsaw jiggy = new Jigsaw(pd);
+		PDFGenerator pdfGenerator = new PDFGenerator(jiggy.getJigsawPieces());
+		try {
+			pdfGenerator.getfinalPuzzle().save(new File("Jigsaw.pdf"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (COSVisitorException e) {
+			e.printStackTrace();
+		}
 	}
 	public Jigsaw(PuzzleData pd) {
 		super(pd);
 		pt = new PuzzleTree(getPieces(), getNph(), getNpw());
-		PieceNode pn = pt.getPiece(2, 3);
-		try {
-			ImageIO.write(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), pd.getImgTail(),new File("vertical."+pd.getImgTail()));
-			ImageIO.write(comvineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), pd.getImgTail(),new File("horizontal."+pd.getImgTail()));
-			ImageIO.write(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true), pd.getImgTail(), new File("clipped." + pd.getImgTail()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-//		jigSawIt();
+		jigSawIt();
+	}
+	public ArrayList<PieceNode> getJigsawPieces(){
+		return pt.getArrayList();
 	}
 	private void jigSawIt() {
 		for (Object x : pt) {
 			PieceNode pn = (PieceNode) x;
+			System.out.println("X: " + pn.getX() + " Y: " + pn.getY());
+			if (pt.getBottomPiece(pn).getBi() != null) {
+				pn.setBi(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true));
+				pt.setBottomPiece(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), false), pn);
 
+			}
+			if (pt.getRightPiece(pn).getBi() != null) {
+				pn.setBi(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), true));
+				pt.setRightPiece(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), false), pn);
+			}
 		}
 	}
 	private BufferedImage combineVertical(BufferedImage cur, BufferedImage bot) {
@@ -60,7 +75,7 @@ public class Jigsaw extends Square{
 		g2.dispose();
 		return fin;
 	}
-	private BufferedImage comvineHorizontal(BufferedImage cur, BufferedImage right) {
+	private BufferedImage combineHorizontal(BufferedImage cur, BufferedImage right) {
 		int height = Math.max(cur.getHeight(), right.getHeight());
 		int width = cur.getWidth() + right.getWidth();
 		BufferedImage fin = new BufferedImage(width, height, cur.getType());
@@ -74,45 +89,121 @@ public class Jigsaw extends Square{
 		BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		if (isCur) {
 			AffineTransform tran = new AffineTransform();
-//			tran.rotate(Math.PI/2);
 			tran.translate(
 					img.getWidth() /256,
 					img.getHeight() / 2
 			);
-			tran.rotate(Math.PI/2);
-
-//			tran.translate(img.getWidth(), img.getHeight()/256);
+			tran.rotate(Math.PI / 2);
 			Path2D p2d = new Path2D.Double();
 			p2d.moveTo(-img.getHeight() / 2, 0);
-			p2d.lineTo(0,0);
+			p2d.lineTo(0, 0);
 			p2d = addCurvePath(img.getHeight() / 2, img.getWidth(), p2d);
 			p2d.lineTo(-img.getWidth(), -img.getHeight() / 2);
 			p2d.closePath();
-			//p2d.transform(tran);
 			Shape sp = p2d.createTransformedShape(tran);
 			Graphics2D g2 = fin.createGraphics();
 			g2.setColor(new Color(0, true));
 			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
 			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-//			g2.setColor(Color.CYAN);
-//			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
 			g2.setClip(sp);
-//			g2.draw(sp);
 			g2.drawImage(img, null, 0, 0);
 			g2.dispose();
+			BufferedImage crop = new BufferedImage(fin.getWidth(), (int)(fin.getHeight() * (.68)), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2dd = crop.createGraphics();
+			g2dd.drawImage(fin, null, 0, 0);
+			g2dd.dispose();
+			return crop;
+		} else {
+			AffineTransform tran = new AffineTransform();
+			tran.translate(
+					img.getWidth() /256,
+					img.getHeight() / 2
+			);
+			tran.rotate(Math.PI / 2);
+			Path2D p2d = new Path2D.Double();
+			p2d.moveTo(img.getHeight() / 2, 0);
+			p2d.lineTo(0, 0);
+			p2d = addCurvePath(img.getHeight() / 2, img.getWidth(), p2d);
+			p2d.lineTo(img.getWidth(), -img.getHeight() / 2);
+			p2d.closePath();
+			Shape sp = p2d.createTransformedShape(tran);
+			Graphics2D g2 = fin.createGraphics();
+			g2.setColor(new Color(0, true));
+			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
+			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+			g2.setClip(sp);
+			g2.drawImage(img, null, 0, 0);
+			g2.dispose();
+			BufferedImage crop = new BufferedImage(fin.getWidth(), fin.getHeight()/2, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2dd = crop.createGraphics();
+			g2dd.drawImage(fin, null, 0, -fin.getHeight() / 2);
+			g2dd.dispose();
+			return crop;
 		}
-		return fin;
 	}
 	private BufferedImage jigSawHorizontal(BufferedImage img, boolean isCur) {
-		return null;
+		BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		if (isCur) {
+			AffineTransform tran = new AffineTransform();
+			tran.translate(
+					img.getWidth() /2,
+					img.getHeight() / 256
+			);
+			tran.rotate(Math.PI);
+			Path2D p2d = new Path2D.Double();
+			p2d.moveTo(img.getHeight(), 0);
+			p2d.lineTo(0, 0);
+			p2d = addCurvePath(img.getHeight(), img.getWidth() / 2, p2d);
+			p2d.lineTo(img.getWidth() / 2, -img.getHeight());
+			p2d.closePath();
+			Shape sp = p2d.createTransformedShape(tran);
+			Graphics2D g2 = fin.createGraphics();
+			g2.setColor(new Color(0, true));
+			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
+			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+			g2.setClip(sp);
+			g2.drawImage(img, null, 0, 0);
+			g2.dispose();
+			BufferedImage crop = new BufferedImage(fin.getWidth() / 2,fin.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2dd = crop.createGraphics();
+			g2dd.drawImage(fin, null, 0, 0);
+			g2dd.dispose();
+			return crop;
+		} else {
+			AffineTransform tran = new AffineTransform();
+			tran.translate(
+					img.getWidth() /2,
+					img.getHeight() / 256
+			);
+			tran.rotate(Math.PI);
+			Path2D p2d = new Path2D.Double();
+			p2d.moveTo(-img.getHeight(), 0);
+			p2d.lineTo(0, 0);
+			p2d = addCurvePath(img.getHeight(), img.getWidth() / 2, p2d);
+			p2d.lineTo(-img.getWidth() / 2, -img.getHeight());
+			p2d.closePath();
+			Shape sp = p2d.createTransformedShape(tran);
+			Graphics2D g2 = fin.createGraphics();
+			g2.setColor(new Color(0, true));
+			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
+			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+			g2.setClip(sp);
+			g2.drawImage(img, null, 0, 0);
+			g2.dispose();
+			BufferedImage crop = new BufferedImage((int)(fin.getWidth() * (0.68)),fin.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g2dd = crop.createGraphics();
+			g2dd.drawImage(fin, null, (int)(-fin.getWidth() * (0.32)), 0);
+			g2dd.dispose();
+			return crop;
+		}
 	}
 	private Path2D addCurvePath(int height, int width, Path2D p2dd) {
-		p2dd.lineTo(0.0, -4*height/9);
-		p2dd.lineTo(width/9, -4*height/9);
-		p2dd.lineTo(2 * width / 9, -3 * height / 9);
-		p2dd.curveTo(2 * width / 9, -3 * height / 9, 5 * width / 9, -5 * height / 9, 2 * width / 9, -7 * height / 9);
-		p2dd.lineTo(width/9, -6*height/9);
-		p2dd.lineTo(0.0, -6*height/9);
+		p2dd.lineTo(0.0, -2*height/5);
+		p2dd.lineTo(width/10, -2*height/5);
+		p2dd.lineTo(width / 5, -3 * height / 10);
+		p2dd.curveTo(width / 5, -3 * height / 10,  width / 2, - height / 2, width / 5, -7 * height / 10);
+		p2dd.lineTo(width/10, -3*height/5);
+		p2dd.lineTo(0.0, -3*height/5);
 		p2dd.lineTo(0.0, -height);
 		return p2dd;
 	}

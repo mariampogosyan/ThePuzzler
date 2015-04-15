@@ -75,25 +75,27 @@ public class DrawPiece extends JFrame {
 				g2d.transform(gat);
 				Path2D p2d = new Path2D.Double();
 				AffineTransform tran = new AffineTransform();
-				tran.rotate( - Math.PI / 2);
-				p2d.moveTo(-height, 0);
+				tran.rotate( Math.PI);
+				p2d.moveTo(height, 0);
 				p2d.lineTo(0, 0);
 				p2d = addCurvePath(height, width, p2d);
-				p2d.lineTo(-width, -height);
+				p2d.lineTo(width, -height);
 				p2d.closePath();
 				p2d.transform(tran);
 				g2d.setStroke(new BasicStroke(4.5f));
 				g2d.draw(p2d);
 				g2d.dispose();
+
 			}
 			private Path2D addCurvePath(int height, int width, Path2D p2dd) {
-				p2dd.lineTo(0.0, -4*height/9);
-				p2dd.lineTo(width/9, -4*height/9);
-				p2dd.lineTo(2 * width / 9, -3 * height / 9);
-				p2dd.curveTo(2 * width / 9, -3 * height / 9, 5 * width / 9, -5 * height / 9, 2 * width / 9, -7 * height / 9);
-				p2dd.lineTo(width/9, -6*height/9);
-				p2dd.lineTo(0.0, -6*height/9);
+				p2dd.lineTo(0.0, -2*height/5);
+				p2dd.lineTo(width/10, -2*height/5);
+				p2dd.lineTo(width / 5, -3 * height / 10);
+				p2dd.curveTo(width / 5, -3 * height / 10,  width / 2, - height / 2, width / 5, -7 * height / 10);
+				p2dd.lineTo(width/10, -3*height/5);
+				p2dd.lineTo(0.0, -3*height/5);
 				p2dd.lineTo(0.0, -height);
+ 				System.out.println("w="+getWidth());
 				return p2dd;
 			}
 		}
