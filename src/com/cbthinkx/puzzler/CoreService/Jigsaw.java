@@ -30,38 +30,52 @@ public class Jigsaw extends Square{
 				PuzzleType.ONESIDED,
 				orig,
 				"jpg",
-				10.0
+				20.0
 		);
 		Jigsaw jiggy = new Jigsaw(pd);
-		PDFGenerator pdfGenerator = new PDFGenerator(jiggy.getJigsawPieces());
-		try {
-			pdfGenerator.getfinalPuzzle().save(new File("Jigsaw.pdf"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (COSVisitorException e) {
-			e.printStackTrace();
-		}
+//		PDFGenerator pdfGenerator = new PDFGenerator(jiggy.getJigsawPieces());
+//		try {
+//			pdfGenerator.getfinalPuzzle().save(new File("Jigsaw.pdf"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (COSVisitorException e) {
+//			e.printStackTrace();
+//		}
 	}
 	public Jigsaw(PuzzleData pd) {
 		super(pd);
-		pt = new PuzzleTree(getPieces(), getNph(), getNpw());
-		jigSawIt();
+		pt = new PuzzleTree(getPieces(), getNpw(), getNph());
+		PieceNode pn = pt.getPiece(3,5);
+			BufferedImage bot = jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), false);
+			BufferedImage top = jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true);
+
+			BufferedImage left = jigSawHorizontal(combineHorizontal(top, pt.getRightPiece(pn).getBi()), true);
+			BufferedImage right = jigSawHorizontal(combineHorizontal(top, pt.getRightPiece(pn).getBi()), false);
+		try {
+			ImageIO.write(bot, "PNG", new File("bot.png"));
+			ImageIO.write(top, "PNG", new File("top.png"));
+			ImageIO.write(right, "PNG", new File("right.png"));
+			ImageIO.write(left, "PNG", new File("left.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		jigSawIt();
 	}
 	public ArrayList<PieceNode> getJigsawPieces(){
 		return pt.getArrayList();
 	}
 	private void jigSawIt() {
+		System.out.println("Row: " + pt.getRow() + " Col: " + pt.getColumn());
 		for (Object x : pt) {
 			PieceNode pn = (PieceNode) x;
 			System.out.println("X: " + pn.getX() + " Y: " + pn.getY());
-			if (pt.getBottomPiece(pn).getBi() != null) {
-				pn.setBi(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true));
+			if (pt.hasBottomPiece(pn)) {
 				pt.setBottomPiece(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), false), pn);
-
+				pn.setBi(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true));
 			}
-			if (pt.getRightPiece(pn).getBi() != null) {
-				pn.setBi(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), true));
+			if (pt.hasRightPiece(pn)) {
 				pt.setRightPiece(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), false), pn);
+				pn.setBi(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), true));
 			}
 		}
 	}

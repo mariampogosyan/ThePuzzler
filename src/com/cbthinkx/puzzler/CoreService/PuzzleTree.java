@@ -8,7 +8,7 @@ public class PuzzleTree implements Iterable {
     private int row;
     private int column;
 
-    public PuzzleTree(ArrayList<PieceNode> list, int row, int column) {
+	public PuzzleTree(ArrayList<PieceNode> list, int row, int column) {
     	this.arrList = list;
     	this.row = row;
     	this.column = column;
@@ -38,8 +38,14 @@ public class PuzzleTree implements Iterable {
 	public PieceNode getBottomPiece(PieceNode pn) {
 		return getPiece(pn.getX(), pn.getY() + 1);
 	}
+	public boolean hasBottomPiece(PieceNode pn) {
+		return checkBounds(pn.getX(), pn.getY() + 1);
+	}
 	public PieceNode getRightPiece(PieceNode pn) {
 		return getPiece(pn.getX() + 1, pn.getY());
+	}
+	public boolean hasRightPiece(PieceNode pn) {
+		return checkBounds(pn.getX() + 1, pn.getY());
 	}
 	public void setBottomPiece(BufferedImage bi, PieceNode pn) {
 		getBottomPiece(pn).setBi(bi);
@@ -50,11 +56,23 @@ public class PuzzleTree implements Iterable {
 	public ArrayList<PieceNode> getArrayList(){
 		return arrList;
 	}
+	public int getRow() {
+		return row;
+	}
+	public void setRow(int row) {
+		this.row = row;
+	}
+	public int getColumn() {
+		return column;
+	}
+	public void setColumn(int column) {
+		this.column = column;
+	}
 
     private class PuzzleTreeIterator<E> implements java.util.Iterator<PieceNode> {
     	private PuzzleTree ptlist;
-		private int x = -1;
-		private int y = 0;
+		private int x;
+		private int y;
 
     	public PuzzleTreeIterator(PuzzleTree ptlist) {
     		this.ptlist = ptlist;
