@@ -12,7 +12,7 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 
 public class PDFGenerator {
-    private static int IMAGE_SPACER = 50;
+    private static int IMAGE_SPACER = 60;
     private PDDocument finalPuzzle;
     private int maxY;
     private int maxX;
@@ -28,7 +28,7 @@ public class PDFGenerator {
         }
 	}
 	private void createPuzzle(ArrayList<PieceNode> arrList) throws Exception {
-		Collections.shuffle(arrList);
+//		Collections.shuffle(arrList);
 		PDDocument document = new PDDocument();
 		PDPage page = new PDPage();
 		document.addPage(page);

@@ -6,11 +6,15 @@ import java.util.Iterator;
 public class PieceNode {
     private int x;
     private int y;
+    private int row;
+    private int col;
 	private BufferedImage bi;
 
-    public PieceNode(int x, int y, BufferedImage bi) {
+    public PieceNode(int x, int y, int r, int c, BufferedImage bi) {
         this.x = x;
         this.y = y;
+        this.col = c;
+        this.row = r;
         this.bi = bi;
     }
     public int getX() {
@@ -35,5 +39,17 @@ public class PieceNode {
 
     public void setBi(BufferedImage bi) {
         this.bi = bi;
+    }
+
+    @Override
+    public String toString() {
+        return "PieceNode{" +
+                "x=" + x +
+                ", y=" + y +
+                ", Row: " + row +
+                ", Col: " + col +
+                ", Width: " + bi.getWidth() +
+                ", Height: " + bi.getHeight() +
+                '}';
     }
 }

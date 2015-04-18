@@ -19,47 +19,47 @@ public class Jigsaw extends Square{
 	public static void main(String[] sa) {
 		BufferedImage orig = null;
 		try {
-			orig = ImageIO.read(new File("res/puzzle.jpg"));
+			orig = ImageIO.read(new File("res/colors.jpg"));
 		} catch (Exception e) {
 
 		}
 		PuzzleData pd = new PuzzleData(
 				PieceShape.SQUARE,
 				PuzzleShape.SQUARE,
-				PuzzleSkill.ADULT,
+				PuzzleSkill.BABY,
 				PuzzleType.ONESIDED,
 				orig,
 				"jpg",
-				20.0
+				10.0
 		);
 		Jigsaw jiggy = new Jigsaw(pd);
-//		PDFGenerator pdfGenerator = new PDFGenerator(jiggy.getJigsawPieces());
-//		try {
-//			pdfGenerator.getfinalPuzzle().save(new File("Jigsaw.pdf"));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (COSVisitorException e) {
-//			e.printStackTrace();
-//		}
+		PDFGenerator pdfGenerator = new PDFGenerator(jiggy.getJigsawPieces());
+		try {
+			pdfGenerator.getfinalPuzzle().save(new File("Jigsaw.pdf"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (COSVisitorException e) {
+			e.printStackTrace();
+		}
 	}
 	public Jigsaw(PuzzleData pd) {
 		super(pd);
 		pt = new PuzzleTree(getPieces(), getNpw(), getNph());
-		PieceNode pn = pt.getPiece(3,5);
-			BufferedImage bot = jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), false);
-			BufferedImage top = jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true);
-
-			BufferedImage left = jigSawHorizontal(combineHorizontal(top, pt.getRightPiece(pn).getBi()), true);
-			BufferedImage right = jigSawHorizontal(combineHorizontal(top, pt.getRightPiece(pn).getBi()), false);
-		try {
-			ImageIO.write(bot, "PNG", new File("bot.png"));
-			ImageIO.write(top, "PNG", new File("top.png"));
-			ImageIO.write(right, "PNG", new File("right.png"));
-			ImageIO.write(left, "PNG", new File("left.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-//		jigSawIt();
+//		PieceNode pn = pt.getPiece(3,5);
+//			BufferedImage bot = jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), false);
+//			BufferedImage top = jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true);
+//
+//			BufferedImage left = jigSawHorizontal(combineHorizontal(top, pt.getRightPiece(pn).getBi()), true);
+//			BufferedImage right = jigSawHorizontal(combineHorizontal(top, pt.getRightPiece(pn).getBi()), false);
+//		try {
+//			ImageIO.write(bot, "PNG", new File("bot.png"));
+//			ImageIO.write(top, "PNG", new File("top.png"));
+//			ImageIO.write(right, "PNG", new File("right.png"));
+//			ImageIO.write(left, "PNG", new File("left.png"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		jigSawIt();
 	}
 	public ArrayList<PieceNode> getJigsawPieces(){
 		return pt.getArrayList();
@@ -68,15 +68,15 @@ public class Jigsaw extends Square{
 		System.out.println("Row: " + pt.getRow() + " Col: " + pt.getColumn());
 		for (Object x : pt) {
 			PieceNode pn = (PieceNode) x;
-			System.out.println("X: " + pn.getX() + " Y: " + pn.getY());
 			if (pt.hasBottomPiece(pn)) {
 				pt.setBottomPiece(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), false), pn);
 				pn.setBi(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true));
 			}
 			if (pt.hasRightPiece(pn)) {
-				pt.setRightPiece(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), false), pn);
 				pn.setBi(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), true));
+				pt.setRightPiece(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), false), pn);
 			}
+			System.out.println(x.toString());
 		}
 	}
 	private BufferedImage combineVertical(BufferedImage cur, BufferedImage bot) {
@@ -206,18 +206,18 @@ public class Jigsaw extends Square{
 			g2.dispose();
 			BufferedImage crop = new BufferedImage((int)(fin.getWidth() * (0.68)),fin.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g2dd = crop.createGraphics();
-			g2dd.drawImage(fin, null, (int)(-fin.getWidth() * (0.32)), 0);
+			g2dd.drawImage(fin, null, (int)(-fin.getWidth() / 2 ), 0);
 			g2dd.dispose();
 			return crop;
 		}
 	}
 	private Path2D addCurvePath(int height, int width, Path2D p2dd) {
-		p2dd.lineTo(0.0, -2*height/5);
-		p2dd.lineTo(width/10, -2*height/5);
+		p2dd.lineTo(0.0, -height/6);
+		p2dd.lineTo(1*width/6, -height/6);
 		p2dd.lineTo(width / 5, -3 * height / 10);
-		p2dd.curveTo(width / 5, -3 * height / 10,  width / 2, - height / 2, width / 5, -7 * height / 10);
+		p2dd.curveTo(width / 6, -2 * height / 3,  width / 3, - height / 3, width / 5, -7 * height / 10);
 		p2dd.lineTo(width/10, -3*height/5);
-		p2dd.lineTo(0.0, -3*height/5);
+		p2dd.lineTo(0.0, -5*height/6);
 		p2dd.lineTo(0.0, -height);
 		return p2dd;
 	}

@@ -1,8 +1,10 @@
 package com.cbthinkx.puzzler.CoreService;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -66,13 +68,29 @@ public class Square {
 		squareIt();
 	}
 	public void squareIt() {
+		BufferedImage new1 = new BufferedImage(
+				nImage.getWidth() + (nImage.getWidth()/3)*2,
+				nImage.getHeight() + (nImage.getHeight()/3)*2,
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = new1.createGraphics();
+		g2d.drawImage(nImage, null, nImage.getWidth() / 3, nImage.getHeight() / 3);
+		g2d.dispose();
+		try {
+			ImageIO.write(new1,"png", new File("newImage.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		nImage = new1;
+
 		npw = (width/pd.getSkill().getVal());
 		nph = (height/pd.getSkill().getVal());
 		
 		for (int i = 0; i < nph; i++) {
 			for (int j = 0; j < npw; j++) {
-				image = nImage.getSubimage(j * width / npw, i * height / nph, width / npw, height / nph);
-				PieceNode pn = new PieceNode(j, i, image);
+				int row = j * width / npw - (width/3);
+				int col = i * height / nph - (height/3);
+				image = nImage.getSubimage(row, col, width / npw, height / nph);
+				PieceNode pn = new PieceNode(j, i, row, col, image);
 				pieces.add(pn);
 			}
        }
