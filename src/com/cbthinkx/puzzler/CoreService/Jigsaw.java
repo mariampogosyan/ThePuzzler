@@ -13,8 +13,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class Jigsaw extends Square{
+public class Jigsaw {
+	private int peiceWidth;
+	private int peiceHeight;
+	private int row;
+	private int col;
+	private PuzzleData pd;
 	private PuzzleTree pt;
+
 
 	public static void main(String[] sa) {
 		BufferedImage orig = null;
@@ -26,7 +32,7 @@ public class Jigsaw extends Square{
 		PuzzleData pd = new PuzzleData(
 				PieceShape.SQUARE,
 				PuzzleShape.SQUARE,
-				PuzzleSkill.BABY,
+				PuzzleSkill.CHILD,
 				PuzzleType.ONESIDED,
 				orig,
 				"jpg",
@@ -43,42 +49,55 @@ public class Jigsaw extends Square{
 		}
 	}
 	public Jigsaw(PuzzleData pd) {
-		super(pd);
-		pt = new PuzzleTree(getPieces(), getNpw(), getNph());
-//		PieceNode pn = pt.getPiece(3,5);
-//			BufferedImage bot = jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), false);
-//			BufferedImage top = jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true);
-//
-//			BufferedImage left = jigSawHorizontal(combineHorizontal(top, pt.getRightPiece(pn).getBi()), true);
-//			BufferedImage right = jigSawHorizontal(combineHorizontal(top, pt.getRightPiece(pn).getBi()), false);
-//		try {
-//			ImageIO.write(bot, "PNG", new File("bot.png"));
-//			ImageIO.write(top, "PNG", new File("top.png"));
-//			ImageIO.write(right, "PNG", new File("right.png"));
-//			ImageIO.write(left, "PNG", new File("left.png"));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		this.row = (pd.getImage().getWidth()/pd.getSkill().getVal());
+		this.col = (pd.getImage().getHeight()/pd.getSkill().getVal());
+		this.peiceWidth = pd.getImage().getWidth() / this.row;
+		this.peiceHeight = pd.getImage().getHeight() / this.col;
+		this.pd = pd;
+		this.pd.setImage(offSetImage(pd.getImage()));
 		jigSawIt();
+	}
+	private void jigSawIt() {
+		this.pt = new PuzzleTree(splitUpImageUp(pd.getImage()), row, col);
+		for (Object x : pt) {
+			System.out.println(x.toString());
+		}
+	}
+	private BufferedImage offSetImage(BufferedImage img) {
+		BufferedImage offSet = new BufferedImage(
+				img.getWidth() + (img.getWidth()/3)*2,
+				img.getHeight() + (img.getHeight()/3)*2,
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = offSet.createGraphics();
+		g2d.drawImage(img, null, img.getWidth() / 3, img.getHeight() / 3);
+		g2d.dispose();
+		return offSet;
+	}
+	private ArrayList<PieceNode> splitUpImageUp(BufferedImage main) {
+		BufferedImage image;
+		int width = main.getWidth();
+		int height = main.getHeight();
+		ArrayList<PieceNode> pieces = new ArrayList<>();
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				int offSetW = width/3;
+				int offSetH = height/3;
+				int x = j * (width-offSetW) / col;
+				int y = i * (height-offSetH) / row;
+				int pWidth = (width+offSetW) / row;
+				int pHeight = (height+offSetH) / col;
+
+				image = main.getSubimage(x, y, pWidth, pHeight);
+				PieceNode pn = new PieceNode(j, i, x, y, image);
+				pieces.add(pn);
+			}
+		}
+		return pieces;
 	}
 	public ArrayList<PieceNode> getJigsawPieces(){
 		return pt.getArrayList();
 	}
-	private void jigSawIt() {
-		System.out.println("Row: " + pt.getRow() + " Col: " + pt.getColumn());
-		for (Object x : pt) {
-			PieceNode pn = (PieceNode) x;
-			if (pt.hasBottomPiece(pn)) {
-				pt.setBottomPiece(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), false), pn);
-				pn.setBi(jigSawVertical(combineVertical(pn.getBi(), pt.getBottomPiece(pn).getBi()), true));
-			}
-			if (pt.hasRightPiece(pn)) {
-				pn.setBi(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), true));
-				pt.setRightPiece(jigSawHorizontal(combineHorizontal(pn.getBi(), pt.getRightPiece(pn).getBi()), false), pn);
-			}
-			System.out.println(x.toString());
-		}
-	}
+
 	private BufferedImage combineVertical(BufferedImage cur, BufferedImage bot) {
 		int height = cur.getHeight() + bot.getHeight();
 		int width = Math.max(cur.getWidth(), bot.getWidth());
@@ -215,7 +234,7 @@ public class Jigsaw extends Square{
 		p2dd.lineTo(0.0, -height/6);
 		p2dd.lineTo(1*width/6, -height/6);
 		p2dd.lineTo(width / 5, -3 * height / 10);
-		p2dd.curveTo(width / 6, -2 * height / 3,  width / 3, - height / 3, width / 5, -7 * height / 10);
+		p2dd.curveTo(width / 6, -2 * height / 3, width / 3, -height / 3, width / 5, -7 * height / 10);
 		p2dd.lineTo(width/10, -3*height/5);
 		p2dd.lineTo(0.0, -5*height/6);
 		p2dd.lineTo(0.0, -height);
