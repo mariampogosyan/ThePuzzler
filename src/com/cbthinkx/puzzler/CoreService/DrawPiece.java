@@ -1,6 +1,7 @@
 package com.cbthinkx.puzzler.CoreService;
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Random;
 
 import javax.swing.*;
 public class DrawPiece extends JFrame {
@@ -80,6 +81,7 @@ public class DrawPiece extends JFrame {
 				p2d.lineTo(0, 0);
 				p2d = addCurvePath(height, width, p2d);
 				p2d.lineTo(width, -height);
+				
 				p2d.closePath();
 				p2d.transform(tran);
 				g2d.setStroke(new BasicStroke(4.5f));
@@ -88,12 +90,16 @@ public class DrawPiece extends JFrame {
 
 			}
 			private Path2D addCurvePath(int height, int width, Path2D p2dd) {
-				p2dd.lineTo(0.0, -2*height/5);
-				p2dd.lineTo(width/10, -2*height/5);
-				p2dd.lineTo(width / 5, -3 * height / 10);
-				p2dd.curveTo(width / 5, -3 * height / 10,  width / 2, - height / 2, width / 5, -7 * height / 10);
-				p2dd.lineTo(width/10, -3*height/5);
-				p2dd.lineTo(0.0, -3*height/5);
+				int [] n = {-1, 1};
+				int k;
+				Random random = new Random();
+				k = n[random.nextInt(n.length)];
+				p2dd.lineTo(0.0, -3*height/8);
+				p2dd.lineTo(k*width/12, -3*height/8);
+				p2dd.lineTo(k*width/4, -height/4);
+				p2dd.curveTo(k*width/4, -height/4, k*width/3, -height/2, k*width/4, -3*height/4);
+				p2dd.lineTo(k*width/12, -5*height/8);
+				p2dd.lineTo(0.0, -5*height/8);
 				p2dd.lineTo(0.0, -height);
  				System.out.println("w="+getWidth());
 				return p2dd;
