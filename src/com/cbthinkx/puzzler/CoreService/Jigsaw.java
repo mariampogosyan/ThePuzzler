@@ -32,7 +32,7 @@ public class Jigsaw {
 		PuzzleData pd = new PuzzleData(
 				PieceShape.SQUARE,
 				PuzzleShape.SQUARE,
-				PuzzleSkill.CHILD,
+				PuzzleSkill.BABY,
 				PuzzleType.ONESIDED,
 				orig,
 				"jpg",
@@ -65,11 +65,11 @@ public class Jigsaw {
 	}
 	private BufferedImage offSetImage(BufferedImage img) {
 		BufferedImage offSet = new BufferedImage(
-				img.getWidth() + (img.getWidth()/3)*2,
-				img.getHeight() + (img.getHeight()/3)*2,
+				img.getWidth() + (peiceWidth/3)*2,
+				img.getHeight() + (peiceHeight/3)*2,
 				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = offSet.createGraphics();
-		g2d.drawImage(img, null, img.getWidth() / 3, img.getHeight() / 3);
+		g2d.drawImage(img, null, peiceWidth/3, peiceHeight/3);
 		g2d.dispose();
 		return offSet;
 	}
@@ -80,10 +80,10 @@ public class Jigsaw {
 		ArrayList<PieceNode> pieces = new ArrayList<>();
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
-				int offSetW = width/3;
-				int offSetH = height/3;
-				int x = j * (width-offSetW) / col;
-				int y = i * (height-offSetH) / row;
+				int offSetW = peiceWidth/3;
+				int offSetH = peiceHeight/3;
+				int x = j * (width-offSetW) / row;
+				int y = i * (height-offSetH) / col;
 				int pWidth = (width+offSetW) / row;
 				int pHeight = (height+offSetH) / col;
 
