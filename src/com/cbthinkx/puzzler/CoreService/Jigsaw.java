@@ -50,11 +50,16 @@ public class Jigsaw {
 	}
 	public Jigsaw(PuzzleData pd) {
 		this.row = (pd.getImage().getWidth()/pd.getSkill().getVal());
+		System.out.println("Row: " + row);
 		this.col = (pd.getImage().getHeight()/pd.getSkill().getVal());
+		System.out.println("Col: " + col);
 		this.peiceWidth = pd.getImage().getWidth() / this.row;
+		System.out.println("pWidth: " + peiceWidth);
 		this.peiceHeight = pd.getImage().getHeight() / this.col;
+		System.out.println("pHeight: " + peiceHeight);
 		this.pd = pd;
 		this.pd.setImage(offSetImage(pd.getImage()));
+		System.out.println("Image Width: " + pd.getImage().getWidth() + " Height: " + pd.getImage().getHeight());
 		jigSawIt();
 	}
 	private void jigSawIt() {
