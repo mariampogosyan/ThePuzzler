@@ -2,13 +2,11 @@ package com.cbthinkx.puzzler.CoreService;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class SplitUpImage extends JFrame {
@@ -29,11 +27,16 @@ public class SplitUpImage extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        row = (orig.getWidth()/ PuzzleSkill.BABY.getVal());
-        col = (orig.getHeight()/ PuzzleSkill.BABY.getVal());
+        row = (orig.getWidth()/ PuzzleSkill.CHILD.getVal());
+        col = (orig.getHeight()/ PuzzleSkill.CHILD.getVal());
         peiceWidth = orig.getWidth() / row;
         peiceHeight = orig.getHeight() / col;
         orig = offSetImage(orig);
+        try {
+            ImageIO.write(orig, "png", new File("newImage.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setVisible(true);
 
     }
@@ -57,6 +60,7 @@ public class SplitUpImage extends JFrame {
         private ArrayList<Integer> yarr;
         private ArrayList<Integer> warr;
         private ArrayList<Integer> harr;
+        private boolean booleano = true;
         private int count = 0;
         private static final long serialVersionUID = 1L;
 
@@ -74,15 +78,17 @@ public class SplitUpImage extends JFrame {
         }
 
         private ActionListener next = ae -> {
-            System.out.println("HI");
             this.count++;
-            System.out.println(this.count);
+            if (!(this.count < xarr.size()+1)) {
+                count--;
+            }
             repaint();
         };
         private ActionListener prev = ae -> {
-            System.out.println("HI2");
             this.count--;
-            System.out.println(this.count);
+            if (count < 0) {
+                count ++;
+            }
             repaint();
         };
 
@@ -94,7 +100,10 @@ public class SplitUpImage extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            setUpArraylist();
+            if (booleano) {
+                booleano = false;
+                setUpArraylist();
+            }
             Graphics2D g2d = (Graphics2D) g.create();
             AffineTransform gat = new AffineTransform();
             gat.translate(
@@ -106,9 +115,7 @@ public class SplitUpImage extends JFrame {
             g2d.setColor(Color.blue);
             g2d.drawImage(orig, null, -orig.getWidth() / 2, -orig.getHeight() / 2);
             g2d.drawRect(-orig.getWidth() / 2, -orig.getHeight() / 2, orig.getWidth(), orig.getHeight());
-            System.out.println(this.count);
             for (int x = 0; x < this.count; x++) {
-                System.out.println("X: " + x);
                 g2d.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
                 g2d.drawRect(xarr.get(x), yarr.get(x), warr.get(x), harr.get(x));
             }
@@ -124,12 +131,18 @@ public class SplitUpImage extends JFrame {
             int height = orig.getHeight();
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
-                    int offSetW = peiceWidth / 3;
-                    int offSetH = peiceHeight / 3;
-                    int x = (j * (width - offSetW) / row) - orig.getWidth() / 2;
-                    int y = (i * (height - offSetH) / col) - orig.getHeight() / 2;
-                    int pWidth = (width + offSetW * 2) / row;
-                    int pHeight = (height + offSetH * 2) / col;
+                    int offSetW = (peiceWidth / 3);
+                    int offSetH = (peiceHeight / 3);
+                    int y = (j * ((width - offSetW - offSetW) / row)) - orig.getHeight() / 2;
+                    int x = (i * ((height - offSetH - offSetH) / col)) - orig.getWidth() / 2;
+                    int pWidth = (width + offSetW + offSetW) / row; //+ offSetW +offSetW
+                    int pHeight = (height + offSetH + offSetH) / col; // + offSetH + offSetH
+                    System.out.print("OffSetW: " + offSetW);
+                    System.out.print(" OffSetH: " + offSetH);
+                    System.out.print(" X: " + x);
+                    System.out.print(" Y: " + y);
+                    System.out.print(" pWidth: " + pWidth);
+                    System.out.println(" pHeight: " + pHeight);
                     xarr.add(x);
                     yarr.add(y);
                     warr.add(pWidth);
