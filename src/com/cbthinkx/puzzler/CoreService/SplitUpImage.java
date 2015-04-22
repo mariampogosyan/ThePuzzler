@@ -14,6 +14,8 @@ public class SplitUpImage extends JFrame {
     private int peiceHeight;
     private int row;
     private int col;
+    private int origWidth;
+    private int origHeight;
     private static final long serialVersionUID = 1L;
     BufferedImage orig;
     public SplitUpImage() {
@@ -27,8 +29,10 @@ public class SplitUpImage extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        row = (orig.getWidth()/ PuzzleSkill.CHILD.getVal());
-        col = (orig.getHeight()/ PuzzleSkill.CHILD.getVal());
+        row = (orig.getWidth()/ PuzzleSkill.ADULT.getVal());
+        col = (orig.getHeight()/ PuzzleSkill.ADULT.getVal());
+        origWidth = orig.getWidth();
+        origHeight = orig.getHeight();        
         peiceWidth = orig.getWidth() / row;
         peiceHeight = orig.getHeight() / col;
         orig = offSetImage(orig);
@@ -113,7 +117,7 @@ public class SplitUpImage extends JFrame {
             gat.scale(1.0, -1.0);
             g2d.transform(gat);
             g2d.setColor(Color.blue);
-            g2d.drawImage(orig, null, -orig.getWidth() / 2, -orig.getHeight() / 2);
+            g2d.drawImage(orig, null, -orig.getWidth() /2, -orig.getHeight()/2 );
             g2d.drawRect(-orig.getWidth() / 2, -orig.getHeight() / 2, orig.getWidth(), orig.getHeight());
             for (int x = 0; x < this.count; x++) {
                 g2d.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
@@ -133,16 +137,23 @@ public class SplitUpImage extends JFrame {
                 for (int j = 0; j < col; j++) {
                     int offSetW = (peiceWidth / 3);
                     int offSetH = (peiceHeight / 3);
-                    int y = (j * ((width - offSetW - offSetW) / row)) - orig.getHeight() / 2;
-                    int x = (i * ((height - offSetH - offSetH) / col)) - orig.getWidth() / 2;
-                    int pWidth = (width + offSetW + offSetW) / row; //+ offSetW +offSetW
-                    int pHeight = (height + offSetH + offSetH) / col; // + offSetH + offSetH
+                    int pWidth = peiceWidth+2*offSetW;
+                    int pHeight = peiceHeight+2*offSetH;
+                    int y = (j * ((origWidth) / row)-offSetH) - origWidth / 2;
+                    int x = (i * ((origHeight) / col)-offSetW) - origHeight / 2;
                     System.out.print("OffSetW: " + offSetW);
                     System.out.print(" OffSetH: " + offSetH);
                     System.out.print(" X: " + x);
                     System.out.print(" Y: " + y);
                     System.out.print(" pWidth: " + pWidth);
-                    System.out.println(" pHeight: " + pHeight);
+                    System.out.print(" pHeight: " + pHeight);
+                    System.out.print("  origWidth"+origWidth);
+                    System.out.print("  origHeight"+origHeight);
+                    System.out.print("  width"+width);
+                    System.out.print("  height"+height);
+                    System.out.print("  peiceWidth"+peiceWidth);
+                    System.out.print("  peiceHeight"+peiceHeight);
+                    System.out.println("  row"+row);
                     xarr.add(x);
                     yarr.add(y);
                     warr.add(pWidth);
