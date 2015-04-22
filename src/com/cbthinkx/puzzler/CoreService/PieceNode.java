@@ -13,6 +13,9 @@ public class PieceNode {
 	private PieceNode right = null;
 	private PieceNode bottom = null;
 	private PieceNode left = null;
+	private int rowPos;
+	private int colPos;
+	
 
     public PieceNode(int x, int y, int r, int c, BufferedImage bi) {
         this.x = x;
@@ -20,6 +23,18 @@ public class PieceNode {
         this.col = c;
         this.row = r;
         this.bi = bi;
+    }
+    public int getRowPos() {
+    	return rowPos;
+    }
+    public void setRowPos(int i) {
+    	this.rowPos = rowPos;
+    }
+    public int getColPos() {
+    	return colPos;
+    }
+    public void setColPos(int i) {
+    	this.colPos = colPos;
     }
     public int getX() {
         return x;
