@@ -74,7 +74,7 @@ public class Square {
 				int row = j * width / npw;
 				int col = i * height / nph;
 				image = nImage.getSubimage(row, col, width / npw, height / nph);
-				PieceNode pn = new PieceNode(j, i, row, col, image);
+				PieceNode pn = new PieceNode(j, i, row, col, image, width / npw, height / nph);
 				pieces.add(pn);
 			}
        }
