@@ -40,7 +40,7 @@ public class Jigsaw1 {
 				"jpg",
 				10.0
 		);
-		Jigsaw puzzle = new Jigsaw(pd);
+		Jigsaw1 puzzle = new Jigsaw1(pd);
 		PDFGenerator pdfGenerator = new PDFGenerator(puzzle.getJigsawPieces());
 		try {
 			pdfGenerator.getfinalPuzzle().save(new File("Jigsaw.pdf"));
@@ -97,7 +97,7 @@ public class Jigsaw1 {
 				PieceNode pn = new PieceNode(j, i, x, y, image);
 				pieces.add(pn);
 			}
-			sides(pHeight, pWidth);
+//			sides(pHeight, pWidth);
 //			position(row, col);
 		}
 		return pieces;
@@ -105,14 +105,14 @@ public class Jigsaw1 {
 	public ArrayList<PieceNode> getJigsawPieces(){
 		return pt.getArrayList();
 	}
-	private void sides(int height, int width) {
-		for (int i = 0; i < pieces.size(); i++) {
-			pieces.get(i).setTop(pieces.get(i - height)); 
-			pieces.get(i).setRight(pieces.get(i + 1));
-			pieces.get(i).setBottom(pieces.get(i + height));
-			pieces.get(i).setLeft(pieces.get(i - 1));
-		}
-	}
+//	private void sides(int height, int width) {
+//		for (int i = 0; i < pieces.size(); i++) {
+//			pieces.get(i).setTop(pieces.get(i - height));
+//			pieces.get(i).setRight(pieces.get(i + 1));
+//			pieces.get(i).setBottom(pieces.get(i + height));
+//			pieces.get(i).setLeft(pieces.get(i - 1));
+//		}
+//	}
 	private Path2D addCurvePath(int height, int width, Path2D p2dd, int k) {
 		p2dd.lineTo(0.0, -3*height/8);
 		p2dd.lineTo(k*width/12, -3*height/8);

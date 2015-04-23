@@ -9,12 +9,10 @@ public class PieceNode {
     private int row;
     private int col;
 	private BufferedImage bi;
-	private PieceNode top = null;
-	private PieceNode right = null;
-	private PieceNode bottom = null;
-	private PieceNode left = null;
-	private int rowPos;
-	private int colPos;
+    private int top;
+    private int bot;
+    private int left;
+    private int right;
 	
 
     public PieceNode(int x, int y, int r, int c, BufferedImage bi) {
@@ -23,18 +21,6 @@ public class PieceNode {
         this.col = c;
         this.row = r;
         this.bi = bi;
-    }
-    public int getRowPos() {
-    	return rowPos;
-    }
-    public void setRowPos(int i) {
-    	this.rowPos = rowPos;
-    }
-    public int getColPos() {
-    	return colPos;
-    }
-    public void setColPos(int i) {
-    	this.colPos = colPos;
     }
     public int getX() {
         return x;
@@ -54,39 +40,42 @@ public class PieceNode {
     public void setBi(BufferedImage bi) {
         this.bi = bi;
     }
-    public PieceNode getTop() {
+    public int getTop() {
 		return top;
 	}
-	public void setTop(PieceNode top) {
+	public void setTop(int top) {
 		this.top = top;
 	}
-	public PieceNode getRight() {
+	public int getRight() {
 		return right;
 	}
-	public void setRight(PieceNode right) {
+	public void setRight(int right) {
 		this.right = right;
 	}
-	public PieceNode getBottom() {
-		return bottom;
+	public int getBottom() {
+		return bot;
 	}
-	public void setBottom(PieceNode bottom) {
-		this.bottom = bottom;
+	public void setBottom(int bottom) {
+		this.bot = bottom;
 	}
-	public PieceNode getLeft() {
+	public int getLeft() {
 		return left;
 	}
-	public void setLeft(PieceNode left) {
+	public void setLeft(int left) {
 		this.left = left;
 	}
+
     @Override
     public String toString() {
         return "PieceNode{" +
                 "x=" + x +
                 ", y=" + y +
-                ", Row: " + row +
-                ", Col: " + col +
-                ", Width: " + bi.getWidth() +
-                ", Height: " + bi.getHeight() +
+                ", row=" + row +
+                ", col=" + col +
+                ", top=" + top +
+                ", bot=" + bot +
+                ", left=" + left +
+                ", right=" + right +
                 '}';
     }
 }

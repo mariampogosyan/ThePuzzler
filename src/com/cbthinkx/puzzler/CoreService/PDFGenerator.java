@@ -45,7 +45,7 @@ public class PDFGenerator {
                  float scale = 1.0f;
                  y = y - ximage.getHeight();
                  contentStream.drawXObject(ximage, x, y, ximage.getWidth()*scale, ximage.getHeight()*scale);
-                 System.out.println("X: " + x + " Y: " + y);
+                 System.out.println("X: " + x + " Y: " + y + " PX: " + arrList.get(i).getX() + " PY: " + arrList.get(i).getY());
                  y = y + ximage.getHeight();
                  if (!newXYPoints(ximage.getWidth(), ximage.getHeight())) {
                      throw new Exception("Image is too big");

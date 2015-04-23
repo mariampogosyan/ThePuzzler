@@ -5,12 +5,10 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class Jigsaw {
@@ -63,6 +61,7 @@ public class Jigsaw {
 	}
 	private void jigSawIt() {
 		this.pt = new PuzzleTree(splitUpImageUp(pd.getImage()), row, col);
+		setUpSides();
 		for (Object x : pt) {
 			System.out.println(x.toString());
 		}
@@ -98,6 +97,44 @@ public class Jigsaw {
 			}
 		}
 		return pieces;
+	}
+	private void setUpSides() {
+		for (Object x : pt) {
+			PieceNode pieceNode = (PieceNode) x;
+			if (pt.hasRightPiece(pieceNode)) {
+				int ranRight = getRandomSide();
+				pieceNode.setRight(ranRight);
+				pt.getRightPiece(pieceNode).setLeft(getOppesite(ranRight));
+			} else {
+				pieceNode.setRight(0);
+			}
+			if (pt.hasBottomPiece(pieceNode)) {
+				int ranBot = getRandomSide();
+				pieceNode.setBottom(ranBot);
+				pt.getBottomPiece(pieceNode).setTop(getOppesite(ranBot));
+			} else {
+				pieceNode.setBottom(0);
+			}
+			if (pieceNode.getY()  == 0) {
+				pieceNode.setTop(0);
+			}
+			if (pieceNode.getY() == pt.getRow()) {
+				pieceNode.setBottom(0);
+			}
+			if (pieceNode.getX() == 0) {
+				pieceNode.setLeft(0);
+			}
+			if (pieceNode.getX() == pt.getColumn()) {
+				pieceNode.setRight(0);
+			}
+		}
+	}
+	private int getRandomSide() {
+		int ran = (int)(Math.random() * 2);
+		return (ran == 0) ? -1 : 1;
+	}
+	private int getOppesite(int num) {
+		return (num == -1) ? 1 : -1;
 	}
 	public ArrayList<PieceNode> getJigsawPieces(){
 		return pt.getArrayList();
