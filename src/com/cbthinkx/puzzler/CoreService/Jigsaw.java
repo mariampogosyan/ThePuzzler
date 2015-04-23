@@ -27,14 +27,14 @@ public class Jigsaw {
 	public static void main(String[] sa) {
 		BufferedImage orig = null;
 		try {
-			orig = ImageIO.read(new File("res/colors.jpg"));
+			orig = ImageIO.read(new File("res/colors2.png"));
 		} catch (Exception e) {
 
 		}
 		PuzzleData pd = new PuzzleData(
 				PieceShape.SQUARE,
 				PuzzleShape.SQUARE,
-				PuzzleSkill.BABY,
+				PuzzleSkill.ADULT,
 				PuzzleType.ONESIDED,
 				orig,
 				"jpg",
@@ -51,8 +51,8 @@ public class Jigsaw {
 		}
 	}
 	public Jigsaw(PuzzleData pd) {
-		this.row = (pd.getImage().getWidth()/ PuzzleSkill.ADULT.getVal());
-		this.col = (pd.getImage().getHeight()/ PuzzleSkill.ADULT.getVal());
+		this.row = (pd.getImage().getWidth() / pd.getSkill().getVal());
+		this.col = (pd.getImage().getHeight() / pd.getSkill().getVal());
 		this.origWidth = pd.getImage().getWidth();
 		this.origHeight = pd.getImage().getHeight();
 		this.peiceWidth = pd.getImage().getWidth() / col;
@@ -84,12 +84,14 @@ public class Jigsaw {
 			for (int j = 0; j < col; j++) {
 				int offSetW = (peiceWidth / 3);
 				int offSetH = (peiceHeight / 3);
-				int pWidth = peiceWidth+2*offSetW;
-				int pHeight = peiceHeight+2*offSetH;
-				int y = (j * (((origWidth) / row)-offSetH));
-				int x = (i * (((origHeight) / col)-offSetW));
+				int pWidth = peiceWidth + (2*offSetW);
+				int pHeight = peiceHeight + (2*offSetH);
+				int y = (j * ((origWidth) / row)-offSetH);
+				y = y + offSetH;
+				int x = (i * ((origHeight) / col)-offSetW);
+				x = x + offSetW;
 				System.out.println("offSetH: " + offSetH + " offSetW: " + offSetW);
-				System.out.println("X: " + x + "Y: " + y + "Width: " + main.getWidth() + " Height: " + main.getHeight());
+				System.out.println("X: " + x + " Y: " + y + " Width: " + main.getWidth() + " Height: " + main.getHeight());
 				image = main.getSubimage(x, y, pWidth, pHeight);
 				PieceNode pn = new PieceNode(j, i, x, y, image);
 				pieces.add(pn);

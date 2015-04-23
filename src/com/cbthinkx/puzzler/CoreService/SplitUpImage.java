@@ -25,7 +25,7 @@ public class SplitUpImage extends JFrame {
         pack();
         setLocationRelativeTo(null);
         try {
-            orig = ImageIO.read(new File("res/colors.jpg"));
+            orig = ImageIO.read(new File("res/colors2.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,6 +141,7 @@ public class SplitUpImage extends JFrame {
                     int pHeight = peiceHeight+2*offSetH;
                     int y = (j * ((origWidth) / row)-offSetH) - origWidth / 2;
                     int x = (i * ((origHeight) / col)-offSetW) - origHeight / 2;
+
                     System.out.print("OffSetW: " + offSetW);
                     System.out.print(" OffSetH: " + offSetH);
                     System.out.print(" X: " + x);
