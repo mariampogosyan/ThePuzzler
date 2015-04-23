@@ -18,6 +18,8 @@ public class Jigsaw {
 	private int peiceHeight;
 	private int row;
 	private int col;
+	private int origWidth;
+	private int origHeight;
 	private PuzzleData pd;
 	private PuzzleTree pt;
 
@@ -49,17 +51,14 @@ public class Jigsaw {
 		}
 	}
 	public Jigsaw(PuzzleData pd) {
-		this.row = (pd.getImage().getWidth()/pd.getSkill().getVal());
-		System.out.println("Row: " + row);
-		this.col = (pd.getImage().getHeight()/pd.getSkill().getVal());
-		System.out.println("Col: " + col);
-		this.peiceWidth = pd.getImage().getWidth() / this.row;
-		System.out.println("pWidth: " + peiceWidth);
-		this.peiceHeight = pd.getImage().getHeight() / this.col;
-		System.out.println("pHeight: " + peiceHeight);
+		this.row = (pd.getImage().getWidth()/ PuzzleSkill.ADULT.getVal());
+		this.col = (pd.getImage().getHeight()/ PuzzleSkill.ADULT.getVal());
+		this.origWidth = pd.getImage().getWidth();
+		this.origHeight = pd.getImage().getHeight();
+		this.peiceWidth = pd.getImage().getWidth() / col;
+		this.peiceHeight = pd.getImage().getHeight() / row;
 		this.pd = pd;
 		this.pd.setImage(offSetImage(pd.getImage()));
-		System.out.println("Image Width: " + pd.getImage().getWidth() + " Height: " + pd.getImage().getHeight());
 		jigSawIt();
 	}
 	private void jigSawIt() {
@@ -80,18 +79,17 @@ public class Jigsaw {
 	}
 	private ArrayList<PieceNode> splitUpImageUp(BufferedImage main) {
 		BufferedImage image;
-		int width = main.getWidth();
-		int height = main.getHeight();
 		ArrayList<PieceNode> pieces = new ArrayList<>();
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
-				int offSetW = peiceWidth/3;
-				int offSetH = peiceHeight/3;
-				int x = j * (width-offSetW) / row;
-				int y = i * (height-offSetH) / col;
-				int pWidth = (width+offSetW) / row;
-				int pHeight = (height+offSetH) / col;
-
+				int offSetW = (peiceWidth / 3);
+				int offSetH = (peiceHeight / 3);
+				int pWidth = peiceWidth+2*offSetW;
+				int pHeight = peiceHeight+2*offSetH;
+				int y = (j * (((origWidth) / row)-offSetH));
+				int x = (i * (((origHeight) / col)-offSetW));
+				System.out.println("offSetH: " + offSetH + " offSetW: " + offSetW);
+				System.out.println("X: " + x + "Y: " + y + "Width: " + main.getWidth() + " Height: " + main.getHeight());
 				image = main.getSubimage(x, y, pWidth, pHeight);
 				PieceNode pn = new PieceNode(j, i, x, y, image);
 				pieces.add(pn);
