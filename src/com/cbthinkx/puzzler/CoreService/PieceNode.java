@@ -8,6 +8,8 @@ public class PieceNode {
     private int y;
     private int row;
     private int col;
+    private int peiceWidth;
+    private int peiceHeight;
 	private BufferedImage bi;
     private int top;
     private int bot;
@@ -15,12 +17,14 @@ public class PieceNode {
     private int right;
 	
 
-    public PieceNode(int x, int y, int r, int c, BufferedImage bi) {
+    public PieceNode(int x, int y, int r, int c, BufferedImage bi, int pw, int ph) {
         this.x = x;
         this.y = y;
         this.col = c;
         this.row = r;
         this.bi = bi;
+        this.peiceWidth = pw;
+        this.peiceHeight = ph;
     }
     public int getX() {
         return x;
@@ -64,6 +68,18 @@ public class PieceNode {
 	public void setLeft(int left) {
 		this.left = left;
 	}
+    public int getPeiceWidth() {
+        return peiceWidth;
+    }
+    public void setPeiceWidth(int peiceWidth) {
+        this.peiceWidth = peiceWidth;
+    }
+    public int getPeiceHeight() {
+        return peiceHeight;
+    }
+    public void setPeiceHeight(int peiceHeight) {
+        this.peiceHeight = peiceHeight;
+    }
 
     @Override
     public String toString() {

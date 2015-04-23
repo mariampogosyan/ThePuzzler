@@ -92,7 +92,7 @@ public class Jigsaw {
 				System.out.println("offSetH: " + offSetH + " offSetW: " + offSetW);
 				System.out.println("X: " + x + " Y: " + y + " Width: " + main.getWidth() + " Height: " + main.getHeight());
 				image = main.getSubimage(x, y, pWidth, pHeight);
-				PieceNode pn = new PieceNode(j, i, x, y, image);
+				PieceNode pn = new PieceNode(j, i, x, y, image, pWidth, pHeight);
 				pieces.add(pn);
 			}
 		}
