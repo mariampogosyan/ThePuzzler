@@ -22,6 +22,7 @@ public class SplitUpImage extends JFrame {
         super("SplitUpImage");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         add(new MyJPanel());
+
         pack();
         setLocationRelativeTo(null);
         try {
