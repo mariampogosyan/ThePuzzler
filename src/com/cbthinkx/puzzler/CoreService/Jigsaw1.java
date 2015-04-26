@@ -21,7 +21,6 @@ public class Jigsaw1 {
 	private PuzzleData pd;
 	private PuzzleTree pt;
 	private ArrayList<PieceNode> pieces;
-	private int k;
 	private int pWidth;
 	private int pHeight;
 	public static void main(String[] sa) {
@@ -29,7 +28,7 @@ public class Jigsaw1 {
 		try {
 			orig = ImageIO.read(new File("res/colors.jpg"));
 		} catch (Exception e) {
-
+            e.printStackTrace();
 		}
 		PuzzleData pd = new PuzzleData(
 				PieceShape.SQUARE,
@@ -94,8 +93,8 @@ public class Jigsaw1 {
 				pWidth = (width+offSetW) / row;
 				pHeight = (height+offSetH) / col;
 				image = main.getSubimage(x, y, pWidth, pHeight);
-				PieceNode pn = new PieceNode(j, i, x, y, image);
-				pieces.add(pn);
+//				PieceNode pn = new PieceNode(j, i, x, y, image);
+//				pieces.add(pn);
 			}
 //			sides(pHeight, pWidth);
 //			position(row, col);

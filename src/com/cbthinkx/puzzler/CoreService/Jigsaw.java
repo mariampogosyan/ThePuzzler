@@ -25,9 +25,9 @@ public class Jigsaw {
 	public static void main(String[] sa) {
 		BufferedImage orig = null;
 		try {
-			orig = ImageIO.read(new File("res/colors2.png"));
+			orig = ImageIO.read(new File("res/colors.jpg"));
 		} catch (Exception e) {
-
+            e.printStackTrace();
 		}
 		PuzzleData pd = new PuzzleData(
 				PieceShape.SQUARE,
@@ -53,8 +53,8 @@ public class Jigsaw {
 		this.col = (pd.getImage().getHeight() / pd.getSkill().getVal());
 		this.origWidth = pd.getImage().getWidth();
 		this.origHeight = pd.getImage().getHeight();
-		this.peiceWidth = pd.getImage().getWidth() / col;
-		this.peiceHeight = pd.getImage().getHeight() / row;
+		this.peiceWidth = pd.getImage().getWidth() / row;
+		this.peiceHeight = pd.getImage().getHeight() / col;
 		this.pd = pd;
 		this.pd.setImage(offSetImage(pd.getImage()));
 		jigSawIt();
@@ -63,7 +63,10 @@ public class Jigsaw {
 		this.pt = new PuzzleTree(splitUpImageUp(pd.getImage()), row, col);
 		setUpSides();
 		for (Object x : pt) {
-			System.out.println(x.toString());
+            PieceNode pn = (PieceNode) x;
+			System.out.println(pn.toString());
+            BufferedImage crop = cropImage(pn.getBottom(), pn.getRight(), pn.getTop(), pn.getLeft(), pn.getBi());
+            pn.setBi(crop);
 		}
 	}
 	private BufferedImage offSetImage(BufferedImage img) {
@@ -79,16 +82,18 @@ public class Jigsaw {
 	private ArrayList<PieceNode> splitUpImageUp(BufferedImage main) {
 		BufferedImage image;
 		ArrayList<PieceNode> pieces = new ArrayList<>();
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				int offSetW = (peiceWidth / 3);
-				int offSetH = (peiceHeight / 3);
-				int pWidth = peiceWidth + (2*offSetW);
-				int pHeight = peiceHeight + (2*offSetH);
-				int y = (j * ((origWidth) / row)-offSetH);
-				y = y + offSetH;
-				int x = (i * ((origHeight) / col)-offSetW);
-				x = x + offSetW;
+//        int width = main.getWidth();
+//        int height = main.getHeight();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int offSetW = (peiceWidth / 3);
+                int offSetH = (peiceHeight / 3);
+                int pWidth = peiceWidth+2*offSetW;
+                int pHeight = peiceHeight+2*offSetH;
+                int y = (j * ((origWidth) / row)-offSetH);
+                y = y + offSetH;
+                int x = (i * ((origHeight) / col)-offSetW);
+                x = x + offSetW;
 				System.out.println("offSetH: " + offSetH + " offSetW: " + offSetW);
 				System.out.println("X: " + x + " Y: " + y + " Width: " + main.getWidth() + " Height: " + main.getHeight());
 				image = main.getSubimage(x, y, pWidth, pHeight);
@@ -139,147 +144,55 @@ public class Jigsaw {
 	public ArrayList<PieceNode> getJigsawPieces(){
 		return pt.getArrayList();
 	}
-
-	private BufferedImage combineVertical(BufferedImage cur, BufferedImage bot) {
-		int height = cur.getHeight() + bot.getHeight();
-		int width = Math.max(cur.getWidth(), bot.getWidth());
-		BufferedImage fin = new BufferedImage(width, height, cur.getType());
-		Graphics2D g2 = fin.createGraphics();
-		g2.drawImage(cur, null, 0, 0);
-		g2.drawImage(bot, null, 0, cur.getHeight());
-		g2.dispose();
-		return fin;
-	}
-	private BufferedImage combineHorizontal(BufferedImage cur, BufferedImage right) {
-		int height = Math.max(cur.getHeight(), right.getHeight());
-		int width = cur.getWidth() + right.getWidth();
-		BufferedImage fin = new BufferedImage(width, height, cur.getType());
-		Graphics2D g2 = fin.createGraphics();
-		g2.drawImage(cur, null, 0, 0);
-		g2.drawImage(right, null, cur.getWidth(), 0);
-		g2.dispose();
-		return fin;
-	}
-	private BufferedImage jigSawVertical(BufferedImage img, boolean isCur) {
-		BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		if (isCur) {
-			AffineTransform tran = new AffineTransform();
-			tran.translate(
-					img.getWidth() /256,
-					img.getHeight() / 2
-			);
-			tran.rotate(Math.PI / 2);
-			Path2D p2d = new Path2D.Double();
-			p2d.moveTo(-img.getHeight() / 2, 0);
-			p2d.lineTo(0, 0);
-			p2d = addCurvePath(img.getHeight() / 2, img.getWidth(), p2d);
-			p2d.lineTo(-img.getWidth(), -img.getHeight() / 2);
-			p2d.closePath();
-			Shape sp = p2d.createTransformedShape(tran);
-			Graphics2D g2 = fin.createGraphics();
-			g2.setColor(new Color(0, true));
-			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
-			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-			g2.setClip(sp);
-			g2.drawImage(img, null, 0, 0);
-			g2.dispose();
-			BufferedImage crop = new BufferedImage(fin.getWidth(), (int)(fin.getHeight() * (.68)), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2dd = crop.createGraphics();
-			g2dd.drawImage(fin, null, 0, 0);
-			g2dd.dispose();
-			return crop;
-		} else {
-			AffineTransform tran = new AffineTransform();
-			tran.translate(
-					img.getWidth() /256,
-					img.getHeight() / 2
-			);
-			tran.rotate(Math.PI / 2);
-			Path2D p2d = new Path2D.Double();
-			p2d.moveTo(img.getHeight() / 2, 0);
-			p2d.lineTo(0, 0);
-			p2d = addCurvePath(img.getHeight() / 2, img.getWidth(), p2d);
-			p2d.lineTo(img.getWidth(), -img.getHeight() / 2);
-			p2d.closePath();
-			Shape sp = p2d.createTransformedShape(tran);
-			Graphics2D g2 = fin.createGraphics();
-			g2.setColor(new Color(0, true));
-			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
-			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-			g2.setClip(sp);
-			g2.drawImage(img, null, 0, 0);
-			g2.dispose();
-			BufferedImage crop = new BufferedImage(fin.getWidth(), fin.getHeight()/2, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2dd = crop.createGraphics();
-			g2dd.drawImage(fin, null, 0, -fin.getHeight() / 2);
-			g2dd.dispose();
-			return crop;
-		}
-	}
-	private BufferedImage jigSawHorizontal(BufferedImage img, boolean isCur) {
-		BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		if (isCur) {
-			AffineTransform tran = new AffineTransform();
-			tran.translate(
-					img.getWidth() /2,
-					img.getHeight() / 256
-			);
-			tran.rotate(Math.PI);
-			Path2D p2d = new Path2D.Double();
-			p2d.moveTo(img.getHeight(), 0);
-			p2d.lineTo(0, 0);
-			p2d = addCurvePath(img.getHeight(), img.getWidth() / 2, p2d);
-			p2d.lineTo(img.getWidth() / 2, -img.getHeight());
-			p2d.closePath();
-			Shape sp = p2d.createTransformedShape(tran);
-			Graphics2D g2 = fin.createGraphics();
-			g2.setColor(new Color(0, true));
-			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
-			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-			g2.setClip(sp);
-			g2.drawImage(img, null, 0, 0);
-			g2.dispose();
-			BufferedImage crop = new BufferedImage(fin.getWidth() / 2,fin.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2dd = crop.createGraphics();
-			g2dd.drawImage(fin, null, 0, 0);
-			g2dd.dispose();
-			return crop;
-		} else {
-			AffineTransform tran = new AffineTransform();
-			tran.translate(
-					img.getWidth() /2,
-					img.getHeight() / 256
-			);
-			tran.rotate(Math.PI);
-			Path2D p2d = new Path2D.Double();
-			p2d.moveTo(-img.getHeight(), 0);
-			p2d.lineTo(0, 0);
-			p2d = addCurvePath(img.getHeight(), img.getWidth() / 2, p2d);
-			p2d.lineTo(-img.getWidth() / 2, -img.getHeight());
-			p2d.closePath();
-			Shape sp = p2d.createTransformedShape(tran);
-			Graphics2D g2 = fin.createGraphics();
-			g2.setColor(new Color(0, true));
-			g2.fillRect(0, 0, img.getWidth(), img.getHeight());
-			g2.setStroke(new BasicStroke(6.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-			g2.setClip(sp);
-			g2.drawImage(img, null, 0, 0);
-			g2.dispose();
-			BufferedImage crop = new BufferedImage((int)(fin.getWidth() * (0.68)),fin.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2dd = crop.createGraphics();
-			g2dd.drawImage(fin, null, (int)(-fin.getWidth() / 2 ), 0);
-			g2dd.dispose();
-			return crop;
-		}
-	}
-	private Path2D addCurvePath(int height, int width, Path2D p2dd) {
-		p2dd.lineTo(0.0, -height/6);
-		p2dd.lineTo(1*width/6, -height/6);
-		p2dd.lineTo(width / 5, -3 * height / 10);
-		p2dd.curveTo(width / 6, -2 * height / 3, width / 3, -height / 3, width / 5, -7 * height / 10);
-		p2dd.lineTo(width/10, -3*height/5);
-		p2dd.lineTo(0.0, -5*height/6);
-		p2dd.lineTo(0.0, -height);
-		return p2dd;
-	}
+    private BufferedImage cropImage(int bottom, int right, int top, int left, BufferedImage img) {
+        int height = img.getHeight();
+        int width = img.getWidth();
+        BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = fin.createGraphics();
+        AffineTransform gat = new AffineTransform();
+        gat.translate(
+                3*width/15,
+                3*height/15
+        );
+        Path2D p2d = new Path2D.Double();
+//      left
+        p2d.moveTo(3*width/15, 3*height/15);
+        p2d.lineTo(6*width/15, 3*height/15);
+        p2d.lineTo(6*width/15, 3*height/15 - left*height/15);
+        p2d.lineTo(5.5*width/15, 3*height/15- 2*left*height/15);
+        p2d.curveTo(5.5*width/15, 3*height/15 - 2*left*height/15, 7.5*width/15, 3*height/15-left*3*height/15, 9.5*width/15, 3*height/15 - 2*left*height/15);
+        p2d.lineTo( 9*width/15, 3*height/15 - left*height/15);
+        p2d.lineTo(9*width/15, 3*height/15);
+        p2d.lineTo(12*width/15, 3*height/15);
+//		bottom
+        p2d.lineTo(12*width/15, 6*height/15);
+        p2d.lineTo(12*width/15 + bottom*width/15, 6*height/15);
+        p2d.lineTo(12*width/15 + bottom*2*width/15, 5.5*height/15);
+        p2d.curveTo(12*width/15 + bottom*2*width/15, 5.5*height/15, 12*width/15 + bottom*3*width/15, 7.5*height/15, 12*width/15 + bottom*2*width/15, 9.5*height/15);
+        p2d.lineTo(12*width/15 + bottom*width/15, 9*height/15);
+        p2d.lineTo(12*width/15, 9*height/15);
+        p2d.lineTo(12*width/15, 12*height/15);
+//		right
+        p2d.lineTo(9*width/15, 12*height/15);
+        p2d.lineTo(9*width/15, 12*height/15 + right*height/15);
+        p2d.lineTo(9.5*width/15, 12*height/15 + 2*right*height/15);
+        p2d.curveTo(9.5*width/15, 12*height/15 + 2*right*height/15, 7.5*width/15, 12*height/15+right*3*height/15, 5.5*width/15, 12*height/15 + 2*right*height/15);
+        p2d.lineTo(6*width/15, 12*height/15 + right*height/15);
+        p2d.lineTo(6*width/15, 12*height/15);
+        p2d.lineTo(3*width/15, 12*height/15);
+//		top
+        p2d.lineTo(3*width/15, 9*height/15);
+        p2d.lineTo(3*width/15 - top*width/15, 9*height/15);
+        p2d.lineTo(3*width/15 - top*2*width/15, 9.5*height/15);
+        p2d.curveTo(3*width/15 - top*2*width/15, 9.5*height/15, 3*width/15 - top*3*width/15, 7.5*height/15, 3*width/15 - top*2*width/15, 5.5*height/15);
+        p2d.lineTo(3*width/15 - top*width/15, 6*height/15);
+        p2d.lineTo(3*width/15, 6*height/15);
+        p2d.lineTo(3*width/15, 3*height/15);
+        p2d.closePath();
+        Shape sp = p2d.createTransformedShape(null);
+        g2d.setClip(sp);
+        g2d.drawImage(img, null, 0, 0);
+        g2d.dispose();
+        return fin;
+    }
 }
