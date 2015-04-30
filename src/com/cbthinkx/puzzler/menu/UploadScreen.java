@@ -12,8 +12,6 @@ import javax.swing.JTextField;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.cbthinkx.puzzler.CoreService.PuzzleType;
-
 public class UploadScreen extends Background{
 	private static final long serialVersionUID = 1L;
 	private JTextField diag;

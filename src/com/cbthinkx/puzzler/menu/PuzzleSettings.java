@@ -8,10 +8,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
-import com.cbthinkx.puzzler.CoreService.PieceShape;
-import com.cbthinkx.puzzler.CoreService.PuzzleShape;
-import com.cbthinkx.puzzler.CoreService.PuzzleSkill;
-import com.cbthinkx.puzzler.CoreService.PuzzleType;
+import com.cbthinkx.puzzler.CoreService.Enum.PieceShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
 
 public class PuzzleSettings extends Background{
 	private static final long serialVersionUID = 1L;

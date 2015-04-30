@@ -1,4 +1,6 @@
-package com.cbthinkx.puzzler.CoreService;
+package com.cbthinkx.puzzler.CoreService.TestClasses.ImageTest;
+
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

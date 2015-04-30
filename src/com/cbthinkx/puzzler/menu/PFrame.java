@@ -61,10 +61,10 @@ public class PFrame extends JFrame {
             String userInput = getData().toString();
             out.println(userInput);
             ImageIO.write(getData().getImage(), getData().getImgTail(), outputStream);
-            //wait for pdf to be returned
-            //
-            //
-            //before closing the socket
+//            wait for pdf to be returned
+//
+//
+//            before closing the socket
             socket.close();
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);

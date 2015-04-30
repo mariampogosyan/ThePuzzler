@@ -1,4 +1,4 @@
-package com.cbthinkx.puzzler.CoreService;
+package com.cbthinkx.puzzler.CoreService.Enum;
 
 public enum PuzzleShape {
     SQUARE(1), ELLIPSE(2), HEART(3), NGON(4);

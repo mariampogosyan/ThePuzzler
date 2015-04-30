@@ -1,5 +1,10 @@
 package com.cbthinkx.puzzler.CoreService;
 
+import com.cbthinkx.puzzler.CoreService.Enum.PieceShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;

@@ -1,5 +1,9 @@
 package com.cbthinkx.puzzler.CoreService;
 
+import com.cbthinkx.puzzler.CoreService.Enum.PieceShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 
 import javax.imageio.ImageIO;
@@ -12,8 +16,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Jigsaw {
-	private int peiceWidth;
-	private int peiceHeight;
+	private int pieceWidth;
+	private int pieceHeight;
 	private int row;
 	private int col;
 	private int origWidth;
@@ -32,7 +36,7 @@ public class Jigsaw {
 		PuzzleData pd = new PuzzleData(
 				PieceShape.SQUARE,
 				PuzzleShape.SQUARE,
-				PuzzleSkill.ADULT,
+				PuzzleSkill.BABY,
 				PuzzleType.ONESIDED,
 				orig,
 				"jpg",
@@ -53,8 +57,8 @@ public class Jigsaw {
 		this.col = (pd.getImage().getHeight() / pd.getSkill().getVal());
 		this.origWidth = pd.getImage().getWidth();
 		this.origHeight = pd.getImage().getHeight();
-		this.peiceWidth = pd.getImage().getWidth() / row;
-		this.peiceHeight = pd.getImage().getHeight() / col;
+		this.pieceWidth = pd.getImage().getWidth() / row;
+		this.pieceHeight = pd.getImage().getHeight() / col;
 		this.pd = pd;
 		this.pd.setImage(offSetImage(pd.getImage()));
 		jigSawIt();
@@ -71,11 +75,11 @@ public class Jigsaw {
 	}
 	private BufferedImage offSetImage(BufferedImage img) {
 		BufferedImage offSet = new BufferedImage(
-				img.getWidth() + (peiceWidth/3)*2,
-				img.getHeight() + (peiceHeight/3)*2,
+				img.getWidth() + (pieceWidth/3)*2,
+				img.getHeight() + (pieceHeight/3)*2,
 				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = offSet.createGraphics();
-		g2d.drawImage(img, null, peiceWidth/3, peiceHeight/3);
+		g2d.drawImage(img, null, pieceWidth/3, pieceHeight/3);
 		g2d.dispose();
 		return offSet;
 	}
@@ -86,10 +90,10 @@ public class Jigsaw {
 //        int height = main.getHeight();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                int offSetW = (peiceWidth / 3);
-                int offSetH = (peiceHeight / 3);
-                int pWidth = peiceWidth+2*offSetW;
-                int pHeight = peiceHeight+2*offSetH;
+                int offSetW = (pieceWidth / 3);
+                int offSetH = (pieceHeight / 3);
+                int pWidth = pieceWidth+2*offSetW;
+                int pHeight = pieceHeight+2*offSetH;
                 int y = (j * ((origWidth) / row)-offSetH);
                 y = y + offSetH;
                 int x = (i * ((origHeight) / col)-offSetW);

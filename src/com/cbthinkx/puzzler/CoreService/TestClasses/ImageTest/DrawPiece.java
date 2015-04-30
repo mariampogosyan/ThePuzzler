@@ -1,4 +1,4 @@
-package com.cbthinkx.puzzler.CoreService;
+package com.cbthinkx.puzzler.CoreService.TestClasses.ImageTest;
 import java.awt.*;
 import java.awt.geom.*;
 

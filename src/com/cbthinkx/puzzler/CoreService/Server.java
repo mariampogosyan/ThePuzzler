@@ -60,15 +60,24 @@ public class Server {
                         PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
                         pdfGen.getfinalPuzzle().save(new File("FinalePDF.pdf"));
                         new Thread(
-                                () -> handleOutPut(socket, pdfGen.getfinalPuzzle())
+                                () -> handleOutPut(ss, pdfGen.getfinalPuzzle())
                         ).start();
                         pdfGen.getfinalPuzzle().close();
                         break;
                     }
                     case JIGSAW: {
+                        System.out.println("Lets get JIGGY");
+                        Jigsaw jiggy = new Jigsaw(pd);
+                        PDFGenerator pdfGen = new PDFGenerator(jiggy.getJigsawPieces());
+                        pdfGen.getfinalPuzzle().save(new File("FinalePDF.pdf"));
+                        new Thread(
+                                () -> handleOutPut(ss, pdfGen.getfinalPuzzle())
+                        ).start();
+                        pdfGen.getfinalPuzzle().close();
                         break;
                     }
                     default:
+                        ss.shutdownInput();
                         break;
                 }
             } catch (Exception ex) {

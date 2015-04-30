@@ -1,5 +1,10 @@
 package com.cbthinkx.puzzler.CoreService;
 
+import com.cbthinkx.puzzler.CoreService.Enum.PieceShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
+
 import java.awt.image.BufferedImage;
 import java.util.regex.Pattern;
 
@@ -56,7 +61,7 @@ public class PuzzleData {
         this.origImage = origImage;
     }
     public String getImgTail() {
-        return "png";
+        return imgTail;
     }
     public void setImgTail(String imgTail) {
         this.imgTail = imgTail;

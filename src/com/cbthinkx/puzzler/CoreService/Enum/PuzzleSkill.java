@@ -1,4 +1,4 @@
-package com.cbthinkx.puzzler.CoreService;
+package com.cbthinkx.puzzler.CoreService.Enum;
 
 public enum PuzzleSkill {
     BABY(144), CHILD(108), ADULT(72);

@@ -1,6 +1,8 @@
 package com.cbthinkx.puzzler.CoreService;
 
 
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
+
 import javax.imageio.ImageIO;
 
 import java.awt.Graphics2D;

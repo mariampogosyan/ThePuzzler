@@ -1,4 +1,4 @@
-package com.cbthinkx.puzzler.CoreService;
+package com.cbthinkx.puzzler.CoreService.Enum;
 
 public enum PuzzleType {
     ONESIDED(1), TWOSIDED(2);
