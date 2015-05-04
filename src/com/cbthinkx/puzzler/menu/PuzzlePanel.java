@@ -105,7 +105,6 @@ public class PuzzlePanel extends JPanel {
                 		)
         );
 		add(upld);
-		img = null;
 		try {
 			this.img = ImageIO.read(new File("res/puzzle_logo.png"));
 		} catch (IOException ex) {
@@ -118,11 +117,33 @@ public class PuzzlePanel extends JPanel {
 		g.drawImage(img, 0, (int)(pf.getHeight()*0.07), this);
 	}
 	private ActionListener pzzl = ae -> {
+		if (image == null) {
+			JOptionPane.showMessageDialog(pf, "Please, upload the picture");
+		} else {
+			if (diag.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(pf, "Please, specify your size");
+			} else {
+				try {
+					size = Double.parseDouble(diag.getText().toString());
+					if (size > 5) {
+						size = Double.parseDouble(diag.getText().toString());
+						pf.getData().setSize(size);
+						pf.getData().setImage(image);
+						pf.getData().setOrigImage(image);
+						pf.getData().setImgTail(imgTail);
+					} else {
+						JOptionPane.showMessageDialog(pf, "Please, enter a bigger number");
+					}
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(pf, "Please, enter a valid number");
+				}
+			}
+		}
 		if((shape.getSelectedIndex()==0) || (skill.getSelectedIndex()==0) || (puzzle.getSelectedIndex()==0) || (side.getSelectedIndex()==0)) {
 			JOptionPane.showMessageDialog(pf, "Please, specify all the parameters");
 		} else {
 			pf.getData().setShape(PuzzleShape.valueOf(shape.getSelectedIndex()));
-			pf.getData().setSkill(PuzzleSkill.valueOf(skill.getSelectedIndex()));
+			pf.getData().setSkill(PuzzleSkill.valueOfIndex(skill.getSelectedIndex()));
 			pf.getData().setShapeType(PieceShape.valueOf(puzzle.getSelectedIndex()));
 			pf.getData().setType(PuzzleType.valueOf(side.getSelectedIndex()));
 			PDDocument PDFDoc = new PuzzleClientSend().PuzzleClientSend(pf.getData());

@@ -53,13 +53,14 @@ public class Jigsaw {
 		}
 	}
 	public Jigsaw(PuzzleData pd) {
+//		pd.setImage(new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), this.pd.getImage()));
+		this.pd = pd;
 		this.row = (pd.getImage().getWidth() / pd.getSkill().getVal());
 		this.col = (pd.getImage().getHeight() / pd.getSkill().getVal());
 		this.origWidth = pd.getImage().getWidth();
 		this.origHeight = pd.getImage().getHeight();
 		this.pieceWidth = pd.getImage().getWidth() / row;
 		this.pieceHeight = pd.getImage().getHeight() / col;
-		this.pd = pd;
 		this.pd.setImage(offSetImage(pd.getImage()));
 		jigSawIt();
 	}

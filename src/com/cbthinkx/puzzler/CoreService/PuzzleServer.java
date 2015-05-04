@@ -1,8 +1,4 @@
-package com.cbthinkx.puzzler.CoreService.TestClasses.ServerTest;
-
-import com.cbthinkx.puzzler.CoreService.Jigsaw;
-import com.cbthinkx.puzzler.CoreService.PDFGenerator;
-import com.cbthinkx.puzzler.CoreService.PuzzleData;
+package com.cbthinkx.puzzler.CoreService;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -53,7 +49,6 @@ public class PuzzleServer {
                     String received = new String(packet.getData(), 0, packet.getLength());
                     PuzzleData pd = new PuzzleData(received, null);
                     System.out.println("Received: " + received);
-
                     byte[] imgbuf = new byte[socket.getReceiveBufferSize()];
                     packet = new DatagramPacket(imgbuf, imgbuf.length);
                     socket.receive(packet);
@@ -63,8 +58,17 @@ public class PuzzleServer {
                     ImageIO.write(img, pd.getImgTail(), new File("RECIEVED." + pd.getImgTail()));
                     pd = new PuzzleData(received, img);
                     // create pdf
-                    Jigsaw jiggy = new Jigsaw(pd);
-                    PDFGenerator pdfGenerator = new PDFGenerator(jiggy.getJigsawPieces());
+                    PDFGenerator pdfGenerator = null;
+                    switch (pd.getShapeType()) {
+                        case JIGSAW:
+                            Jigsaw jiggy = new Jigsaw(pd);
+                            pdfGenerator = new PDFGenerator(jiggy.getJigsawPieces());
+                            break;
+                        case SQUARE:
+                            Square square = new Square(pd);
+                            pdfGenerator = new PDFGenerator(square.getPieces());
+                            break;
+                    }
                     // save pdf to output stream
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     pdfGenerator.getfinalPuzzle().save(outputStream);
@@ -75,8 +79,6 @@ public class PuzzleServer {
                     byte[] pdfBuf = outputStream.toByteArray();
                     packet = new DatagramPacket(pdfBuf, pdfBuf.length, address, port);
                     socket.send(packet);
-
-
                     // done receiving
                     isReceiving = false;
                 } catch (Exception e) {

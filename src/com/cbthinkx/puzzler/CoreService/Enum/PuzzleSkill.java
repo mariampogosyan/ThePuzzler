@@ -17,5 +17,17 @@ public enum PuzzleSkill {
         }
         return null;
     }
+    public static PuzzleSkill valueOfIndex(int x) {
+        if (x == 1) {
+            return BABY;
+        }
+        if (x == 2) {
+            return CHILD;
+        }
+        if (x == 3) {
+            return ADULT;
+        }
+        return null;
+    }
 
 }
