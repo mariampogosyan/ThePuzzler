@@ -4,16 +4,14 @@ import com.cbthinkx.puzzler.CoreService.Enum.PieceShape;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
-import com.cbthinkx.puzzler.CoreService.Jigsaw;
+import com.cbthinkx.puzzler.CoreService.PuzzleClientSend;
 import com.cbthinkx.puzzler.CoreService.PuzzleData;
-import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by Robert on 4/29/15.

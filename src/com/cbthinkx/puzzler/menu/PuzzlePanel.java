@@ -1,8 +1,6 @@
 package com.cbthinkx.puzzler.menu;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,6 +20,8 @@ import com.cbthinkx.puzzler.CoreService.Enum.PieceShape;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
+import com.cbthinkx.puzzler.CoreService.PuzzleClientSend;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 public class PuzzlePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -125,7 +125,13 @@ public class PuzzlePanel extends JPanel {
 			pf.getData().setSkill(PuzzleSkill.valueOf(skill.getSelectedIndex()));
 			pf.getData().setShapeType(PieceShape.valueOf(puzzle.getSelectedIndex()));
 			pf.getData().setType(PuzzleType.valueOf(side.getSelectedIndex()));
-//            pf.sendPuzzle();
+			PDDocument PDFDoc = new PuzzleClientSend().PuzzleClientSend(pf.getData());
+			try {
+				PDFDoc.save(new File("GOTAPDF.pdf"));
+				Desktop.getDesktop().open(new File("GOTAPDF.pdf"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			System.out.println(pf.getData().toString());
 		}
 	};

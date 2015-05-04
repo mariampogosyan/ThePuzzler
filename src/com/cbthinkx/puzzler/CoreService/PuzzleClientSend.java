@@ -1,4 +1,4 @@
-package com.cbthinkx.puzzler.CoreService.TestClasses.ServerTest;
+package com.cbthinkx.puzzler.CoreService;
 
 import com.cbthinkx.puzzler.CoreService.PuzzleData;
 import org.apache.pdfbox.pdmodel.PDDocument;
