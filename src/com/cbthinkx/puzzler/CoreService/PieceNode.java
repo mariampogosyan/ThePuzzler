@@ -17,7 +17,7 @@ public class PieceNode {
     private int right;
 	
 
-    public PieceNode(int x, int y, int r, int c, BufferedImage bi, int pw, int ph) {
+    public PieceNode(int x, int y, int r, int c,   BufferedImage bi, int pw, int ph) {
         this.x = x;
         this.y = y;
         this.col = c;

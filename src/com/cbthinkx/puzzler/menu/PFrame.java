@@ -1,6 +1,7 @@
 package com.cbthinkx.puzzler.menu;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,8 +24,8 @@ public class PFrame extends JFrame {
     private static final String hostName = "localhost";
     private static final int portNumber = 25565;
 	private JPanel puzzler;
-    private int height = 550;
-    private int width = 550;
+    private int height = 750;
+    private int width = 750;
     private CardLayout layout;
     private PuzzleData data = new PuzzleData();
 	public PFrame() {
@@ -34,6 +35,7 @@ public class PFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setVisible(true);
+		setBackground(Color.WHITE);
 		puzzler = new JPanel();
 		layout = new CardLayout();
 		puzzler.setLayout(layout);

@@ -1,6 +1,8 @@
 package com.cbthinkx.puzzler.menu;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +28,9 @@ public abstract class Background extends JPanel {
 		@Override
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
-			g.drawImage(background, 0, 0, this);
+			Graphics2D g2d = (Graphics2D) g.create();
+			g2d.setColor(Color.WHITE);
+			g2d.fillRect(0, 0, getWidth(), getHeight());
+			//g.drawImage(background, 0, 0, this);
 	}
 }
