@@ -66,7 +66,6 @@ public class PuzzleData {
     public void setImgTail(String imgTail) {
         this.imgTail = imgTail;
     }
-
     public PuzzleData(PieceShape shapeType, PuzzleShape shape, PuzzleSkill skill, PuzzleType type, BufferedImage image, String imgTail, double size) {
         this.shapeType = shapeType;
         this.shape = shape;
@@ -102,7 +101,6 @@ public class PuzzleData {
                 "," + imgTail +
                 '}';
     }
-
     private double[] fromString(String d) {
         String data = Pattern.compile("PuzzleData").matcher(d).replaceAll("");
         data = data.replace("{","");

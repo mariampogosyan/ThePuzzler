@@ -33,16 +33,16 @@ public class SplitUpImage extends JFrame {
             e.printStackTrace();
         }
         col = (orig.getWidth()/ PuzzleSkill.ADULT.getVal());
-//      col = (orig.getHeight()/ PuzzleSkill.ADULT.getVal());
+        System.out.println(col);
         origWidth = orig.getWidth();
         origHeight = orig.getHeight();   
-        
-//        peiceWidth = orig.getWidth() / row;
-//        peiceHeight = orig.getHeight() / col;
         peiceWidth = orig.getWidth()/col;
-        row = orig.getHeight()/peiceWidth;
-        peiceHeight =orig.getHeight()/row;
+        row = (int) (orig.getHeight()/peiceWidth);
+        System.out.println(row);
+        peiceHeight = peiceWidth;
         row = orig.getHeight()/peiceHeight;
+        peiceHeight = orig.getHeight()/row;
+        System.out.println(row);        
         orig = offSetImage(orig);
         try {
             ImageIO.write(orig, "png", new File("newImage.png"));
@@ -141,15 +141,14 @@ public class SplitUpImage extends JFrame {
             warr = new ArrayList<>();
             int width = orig.getWidth();
             int height = orig.getHeight();
-            for (int i = 0; i < col; i++) {
-                for (int j = 0; j < row; j++) {
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < col; j++) {
                     int offSetW = (peiceWidth / 3);
                     int offSetH = (peiceHeight / 3);
                     int pWidth = peiceWidth+2*offSetW;
                     int pHeight = peiceHeight+2*offSetH;
-                    int y = (j * ((origWidth) /col)-offSetH) - origHeight / 2;
-                    int x = (i * ((origHeight) / row)-offSetW) - origWidth / 2;
-
+                    int x = (j * ((origWidth) /col)-offSetW) - origWidth / 2;
+                    int y = (i * ((origHeight) / row)-offSetH) - origHeight / 2;
                     System.out.print("OffSetW: " + offSetW);
                     System.out.print(" OffSetH: " + offSetH);
                     System.out.print(" X: " + x);

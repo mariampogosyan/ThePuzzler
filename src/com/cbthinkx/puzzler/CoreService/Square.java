@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-
 public class Square {
 	PuzzleData pd;
 	BufferedImage image;
@@ -20,7 +19,6 @@ public class Square {
 	int height;
 	int npw;
 	int nph;
-
     public ArrayList<PieceNode> getPieces() {
         return pieces;
     }
