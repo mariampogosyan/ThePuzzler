@@ -69,17 +69,13 @@ public class PuzzleServer {
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     pdfGenerator.getfinalPuzzle().save(outputStream);
                     outputStream.flush();
+                    //send pdf back to client
                     InetAddress address = packet.getAddress();
                     int port = packet.getPort();
                     byte[] pdfBuf = outputStream.toByteArray();
                     packet = new DatagramPacket(pdfBuf, pdfBuf.length, address, port);
                     socket.send(packet);
 
-                    // send the response to the client at "address" and "port"
-//                    InetAddress address = packet.getAddress();
-//                    int port = packet.getPort();
-//                    packet = new DatagramPacket(buf, buf.length, address, port);
-//                    socket.send(packet);
 
                     // done receiving
                     isReceiving = false;

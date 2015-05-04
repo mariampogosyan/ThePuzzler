@@ -4,15 +4,12 @@ import com.cbthinkx.puzzler.CoreService.PuzzleData;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.ArrayList;
 
 /**
  * Created by Robert on 4/29/15.
@@ -20,7 +17,10 @@ import java.util.ArrayList;
 public class PuzzleClientSend {
     private final static String SERVER_ADDRESS = "127.0.0.1";
     private final static int PORT_NUMBER = 25565;
-    public PuzzleClientSend(PuzzleData pd) {
+
+    public PuzzleClientSend() {
+    }
+    public PDDocument PuzzleClientSend(PuzzleData pd) {
         try (
             // get a datagram socket
             DatagramSocket socket = new DatagramSocket()
@@ -52,17 +52,17 @@ public class PuzzleClientSend {
 
             InputStream is = new ByteArrayInputStream(packet.getData());
             PDDocument pdf = PDDocument.load(is);
-            pdf.save(new File("GOTAPDF.pdf"));
-            // receive request for size of image
+            // get final response
             byte[] buf = new byte[256];
             packet = new DatagramPacket(buf, buf.length);
             socket.receive(packet);
             String received = new String(packet.getData(), 0, packet.getLength());
             System.out.println("Received: " + received);
-
             socket.close();
+            return pdf;
         } catch (Exception e) {
            e.printStackTrace();
         }
+        return null;
     }
 }

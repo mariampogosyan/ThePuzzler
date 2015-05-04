@@ -153,6 +153,7 @@ public class Jigsaw {
         int width = img.getWidth();
         BufferedImage fin = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = fin.createGraphics();
+		g2d.setPaint(Color.white);
         AffineTransform gat = new AffineTransform();
         gat.translate(
                 3*width/15,
