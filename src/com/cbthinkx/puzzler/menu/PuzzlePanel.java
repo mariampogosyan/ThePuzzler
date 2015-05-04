@@ -131,6 +131,22 @@ public class PuzzlePanel extends JPanel {
 						pf.getData().setImage(image);
 						pf.getData().setOrigImage(image);
 						pf.getData().setImgTail(imgTail);
+						if((shape.getSelectedIndex()==0) || (skill.getSelectedIndex()==0) || (puzzle.getSelectedIndex()==0) || (side.getSelectedIndex()==0)) {
+							JOptionPane.showMessageDialog(pf, "Please, specify all the parameters");
+						} else {
+							pf.getData().setShape(PuzzleShape.valueOf(shape.getSelectedIndex()));
+							pf.getData().setSkill(PuzzleSkill.valueOfIndex(skill.getSelectedIndex()));
+							pf.getData().setShapeType(PieceShape.valueOf(puzzle.getSelectedIndex()));
+							pf.getData().setType(PuzzleType.valueOf(side.getSelectedIndex()));
+							PDDocument PDFDoc = new PuzzleClientSend().PuzzleClientSend(pf.getData());
+							try {
+								PDFDoc.save(new File("GOTAPDF.pdf"));
+								Desktop.getDesktop().open(new File("GOTAPDF.pdf"));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							System.out.println(pf.getData().toString());
+						}
 					} else {
 						JOptionPane.showMessageDialog(pf, "Please, enter a bigger number");
 					}
@@ -138,22 +154,6 @@ public class PuzzlePanel extends JPanel {
 					JOptionPane.showMessageDialog(pf, "Please, enter a valid number");
 				}
 			}
-		}
-		if((shape.getSelectedIndex()==0) || (skill.getSelectedIndex()==0) || (puzzle.getSelectedIndex()==0) || (side.getSelectedIndex()==0)) {
-			JOptionPane.showMessageDialog(pf, "Please, specify all the parameters");
-		} else {
-			pf.getData().setShape(PuzzleShape.valueOf(shape.getSelectedIndex()));
-			pf.getData().setSkill(PuzzleSkill.valueOfIndex(skill.getSelectedIndex()));
-			pf.getData().setShapeType(PieceShape.valueOf(puzzle.getSelectedIndex()));
-			pf.getData().setType(PuzzleType.valueOf(side.getSelectedIndex()));
-			PDDocument PDFDoc = new PuzzleClientSend().PuzzleClientSend(pf.getData());
-			try {
-				PDFDoc.save(new File("GOTAPDF.pdf"));
-				Desktop.getDesktop().open(new File("GOTAPDF.pdf"));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			System.out.println(pf.getData().toString());
 		}
 	};
 	private ActionListener upload = ae -> {
