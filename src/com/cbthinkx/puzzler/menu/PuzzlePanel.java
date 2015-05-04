@@ -18,10 +18,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.cbthinkx.puzzler.CoreService.PieceShape;
-import com.cbthinkx.puzzler.CoreService.PuzzleShape;
-import com.cbthinkx.puzzler.CoreService.PuzzleSkill;
-import com.cbthinkx.puzzler.CoreService.PuzzleType;
+import com.cbthinkx.puzzler.CoreService.Enum.PieceShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
+import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
 
 public class PuzzlePanel extends JPanel {
 	private static final long serialVersionUID = 1L;

@@ -19,7 +19,7 @@ public class TestClient extends Thread {
         try {
             orig = ImageIO.read(new File("res/colors.jpg"));
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         PuzzleData pd = new PuzzleData(
                 PieceShape.JIGSAW,
