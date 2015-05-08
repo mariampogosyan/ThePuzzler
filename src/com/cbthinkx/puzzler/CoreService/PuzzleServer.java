@@ -7,9 +7,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-/**
- * Created by Robert on 4/29/15.
- */
 public class PuzzleServer {
     public static void main(String[] sa) throws IOException {
         new PuzzleServer().doit();
@@ -39,8 +36,7 @@ public class PuzzleServer {
             DatagramPacket packet = null;
             while (isReceiving) {
                 try {
-                    byte[] buf = new byte[256];
-
+                    byte[] buf = new byte[socket.getReceiveBufferSize()];
                     // receive puzzle data string
                     packet = new DatagramPacket(buf, buf.length);
                     socket.receive(packet);
@@ -78,6 +74,7 @@ public class PuzzleServer {
                     int port = packet.getPort();
                     byte[] pdfBuf = outputStream.toByteArray();
                     packet = new DatagramPacket(pdfBuf, pdfBuf.length, address, port);
+                    socket.setSendBufferSize(pdfBuf.length);
                     socket.send(packet);
                     // done receiving
                     isReceiving = false;
@@ -92,6 +89,7 @@ public class PuzzleServer {
                     InetAddress address = packet.getAddress();
                     int port = packet.getPort();
                     packet = new DatagramPacket(buf, buf.length, address, port);
+                    socket.setSendBufferSize(buf.length);
                     socket.send(packet);
                 } catch (Exception e) {
                     e.printStackTrace();

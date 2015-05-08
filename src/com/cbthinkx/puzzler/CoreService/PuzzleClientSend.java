@@ -37,6 +37,7 @@ public class PuzzleClientSend {
             InetAddress address = InetAddress.getByName(SERVER_ADDRESS);
             int port = PORT_NUMBER;
             DatagramPacket packet = new DatagramPacket(pdBuf, pdBuf.length, address, port);
+            socket.setSendBufferSize(pdBuf.length);
             socket.send(packet);
             // send request for pdf size
             ByteArrayOutputStream boas = new ByteArrayOutputStream();
@@ -44,16 +45,18 @@ public class PuzzleClientSend {
             boas.flush();
             byte[] imgBuf = boas.toByteArray();
             packet = new DatagramPacket(imgBuf, imgBuf.length, address, port);
+            socket.setSendBufferSize(imgBuf.length);
             socket.send(packet);
 
             byte[] pdfBuff = new byte[socket.getReceiveBufferSize()];
             packet = new DatagramPacket(pdfBuff, pdfBuff.length);
+            socket.setSendBufferSize(pdfBuff.length);
             socket.receive(packet);
 
             InputStream is = new ByteArrayInputStream(packet.getData());
             PDDocument pdf = PDDocument.load(is);
             // get final response
-            byte[] buf = new byte[256];
+            byte[] buf = new byte[socket.getReceiveBufferSize()];
             packet = new DatagramPacket(buf, buf.length);
             socket.receive(packet);
             String received = new String(packet.getData(), 0, packet.getLength());
