@@ -63,9 +63,12 @@ public class ClientSendTest extends Thread {
             //writes the image to the OutputStream
             ImageIO.write(pd.getImage(), pd.getImgTail(), out);
             out.flush();
-            new Thread(
-                    () -> recievePDF(ss)
-            ).start();
+            System.out.println("sentImage");
+            ss.shutdownOutput();
+//            new Thread(
+//                    () -> recievePDF(ss)
+//            ).start();
+            recievePDF(ss);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,6 +77,7 @@ public class ClientSendTest extends Thread {
         try (
             InputStream in = ss.getInputStream();
         ) {
+            System.out.println("recievePDF");
             //size of the pdfDoc
             byte[] pdfSize = new byte[4];
             //gets the size of the pdf
@@ -90,6 +94,7 @@ public class ClientSendTest extends Thread {
             PDDocument pdf = PDDocument.load(is);
             //now i can do shit with my pdf hahahahahaha
             this.pdfDoc = pdf;
+            ss.shutdownInput();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -53,7 +53,7 @@ public class Server {
         }
         private void recievePDInfo(Socket ss) {
             try (
-                InputStream is = ss.getInputStream();
+                InputStream is = ss.getInputStream()
             ) {
                 String data;
                 PuzzleData pd;
@@ -72,20 +72,20 @@ public class Server {
                 // new pd for imageTail
                 pd = new PuzzleData(data, null);
                 // new image from stream
+                System.out.println(pd.toString());
                 BufferedImage image = ImageIO.read(is);
                 // saves the image to a file
                 ImageIO.write(image, pd.getImgTail(), new File("RecievedImageServer." + pd.getImgTail()));
                 //creates new puzzleData
                 pd = new PuzzleData(data, image);
+                ss.shutdownInput();
                 switch(pd.getShapeType()) {
                     case SQUARE: {
                         Square sq = new Square(pd);
                         PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
                         pdfGen.getfinalPuzzle().save(new File("FinalePDF.pdf"));
-                        new Thread(
-                                () -> handleOutPut(ss, pdfGen.getfinalPuzzle())
-                        ).start();
-                        // pdfGen.getfinalPuzzle().close();
+                        handleOutPut(ss, pdfGen.getfinalPuzzle());
+                        pdfGen.getfinalPuzzle().close();
                         break;
                     }
                     case JIGSAW: {
@@ -93,10 +93,8 @@ public class Server {
                         Jigsaw jiggy = new Jigsaw(pd);
                         PDFGenerator pdfGen = new PDFGenerator(jiggy.getJigsawPieces());
                         pdfGen.getfinalPuzzle().save(new File("FinalePDF.pdf"));
-                        new Thread(
-                                () -> handleOutPut(ss, pdfGen.getfinalPuzzle())
-                        ).start();
-                        // pdfGen.getfinalPuzzle().close();
+                        handleOutPut(ss, pdfGen.getfinalPuzzle());
+                        pdfGen.getfinalPuzzle().close();
                         break;
                     }
                     default:
@@ -108,12 +106,13 @@ public class Server {
         }
         public void handleOutPut(Socket ss, PDDocument puzzle) {
             try (
-                OutputStream out = ss.getOutputStream();
+                OutputStream out = ss.getOutputStream()
             ){
                 // save pdf to output stream
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 puzzle.save(outputStream);
                 outputStream.flush();
+                outputStream.close();
                 // creates a byte[] to hole the pdf
                 byte[] pdfBuf = outputStream.toByteArray();
                 System.out.println("pdfBuf: " + pdfBuf.length);
@@ -124,7 +123,9 @@ public class Server {
                 out.write(pdfSize);
                 //writes the pdf
                 out.write(pdfBuf);
+                out.flush();
                 //closes the socket
+                ss.shutdownOutput();
                 ss.close();
             } catch (Exception e) {
                 e.printStackTrace();
