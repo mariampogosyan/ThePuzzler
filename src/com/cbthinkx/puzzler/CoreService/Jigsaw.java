@@ -54,8 +54,8 @@ public class Jigsaw {
 		}
 	}
 	public Jigsaw(PuzzleData pd) {
-//		pd.setImage(new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), this.pd.getImage()));
 		this.pd = pd;
+		this.pd.setImage(new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), this.pd.getImage()));
 		this.origWidth = pd.getImage().getWidth();
 		this.origHeight = pd.getImage().getHeight();
 		this.col = (pd.getImage().getWidth() / pd.getSkill().getVal());

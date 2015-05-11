@@ -1,102 +1,129 @@
 package com.cbthinkx.puzzler.CoreService;
 
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class PuzzleServer {
-    public static void main(String[] sa) throws IOException {
-        new PuzzleServer().doit();
+    public static void main(String[] args) throws IOException {
+        new PuzzleServer().doit(25565);
     }
-    public void doit() {
-        new PuzzleServerThread().start();
-    }
-    public class PuzzleServerThread extends Thread {
-        private final static int PORT_NUMBER = 25565;
-        private Boolean isReceiving = true;
-        private Boolean isSending = true;
-        protected DatagramSocket socket = null;
-
-        public PuzzleServerThread() {
-            this("PuzzleServerThread");
+    public void doit(int portNumber) {
+        try {
+            boolean done = false;
+            ServerSocket ss = new ServerSocket(portNumber);
+            System.out.println("Server started successfully");
+            while (!done) {
+                Socket sock = ss.accept();
+                new ClientThread(sock).start();
+            }
+            ss.close();
+        } catch (Throwable t) {
+            System.err.println("Server failed to start...");
         }
-        public PuzzleServerThread(String s) {
-            super(s);
-            try {
-                socket = new DatagramSocket(PORT_NUMBER);
-
+    }
+    public class ClientThread extends Thread {
+        private Socket socket;
+        ClientThread(Socket ss) {
+            this.socket = ss;
+        }
+        @Override
+        public void run() {
+            new Thread(
+                    () -> recievePDInfo(socket)
+            ).start();
+        }
+        public byte[] getSizeInBytes(int s) {
+            return ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN).putInt(s).array();
+        }
+        public int getSizeFromBuf(byte[] buf) {
+            return ByteBuffer.wrap(buf).order(ByteOrder.BIG_ENDIAN).getInt();
+        }
+        private void recievePDInfo(Socket ss) {
+            try (
+                InputStream is = ss.getInputStream()
+            ) {
+                String data;
+                PuzzleData pd;
+                byte[] stringSize = new byte[4];
+                //gets the string size
+                is.read(stringSize);
+                System.out.println("stringSize: " + stringSize.toString());
+                //creates buf to hold string
+                System.out.println("stringSizeInt: " + getSizeFromBuf(stringSize));
+                byte[] stringBuf = new byte[getSizeFromBuf(stringSize)];
+                //gets the string
+                is.read(stringBuf);
+                //creates the string
+                data = new String(stringBuf);
+                System.out.println(data);
+                // new pd for imageTail
+                pd = new PuzzleData(data, null);
+                // new image from stream
+                System.out.println(pd.toString());
+                BufferedImage image = ImageIO.read(is);
+                //creates new puzzleData
+                pd = new PuzzleData(data, image);
+                ss.shutdownInput();
+                switch(pd.getShapeType()) {
+                    case SQUARE: {
+                        Square sq = new Square(pd);
+                        PDFGenerator pdfGen = new PDFGenerator(sq.getPieces());
+                        pdfGen.getfinalPuzzle().save(new File("FinalePDF.pdf"));
+                        handleOutPut(ss, pdfGen.getfinalPuzzle());
+                        pdfGen.getfinalPuzzle().close();
+                        break;
+                    }
+                    case JIGSAW: {
+                        System.out.println("Lets get JIGGY");
+                        Jigsaw jiggy = new Jigsaw(pd);
+                        PDFGenerator pdfGen = new PDFGenerator(jiggy.getJigsawPieces());
+                        pdfGen.getfinalPuzzle().save(new File("FinalePDF.pdf"));
+                        handleOutPut(ss, pdfGen.getfinalPuzzle());
+                        pdfGen.getfinalPuzzle().close();
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        public void handleOutPut(Socket ss, PDDocument puzzle) {
+            try (
+                OutputStream out = ss.getOutputStream()
+            ){
+                // save pdf to output stream
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                puzzle.save(outputStream);
+                outputStream.flush();
+                outputStream.close();
+                // creates a byte[] to hole the pdf
+                byte[] pdfBuf = outputStream.toByteArray();
+                System.out.println("pdfBuf: " + pdfBuf.length);
+                // size of the pdf byteArray
+                byte[] pdfSize = getSizeInBytes(pdfBuf.length);
+                System.out.println("pdfSize: " + pdfSize.toString());
+                //writes the size of the pdf
+                out.write(pdfSize);
+                //writes the pdf
+                out.write(pdfBuf);
+                out.flush();
+                //closes the socket
+                ss.shutdownOutput();
+                ss.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        public void run() {
-            DatagramPacket packet = null;
-            while (isReceiving) {
-                try {
-                    byte[] buf = new byte[socket.getReceiveBufferSize()];
-                    // receive puzzle data string
-                    packet = new DatagramPacket(buf, buf.length);
-                    socket.receive(packet);
-
-                    // figure out response
-                    String received = new String(packet.getData(), 0, packet.getLength());
-                    PuzzleData pd = new PuzzleData(received, null);
-                    System.out.println("Received: " + received);
-                    byte[] imgbuf = new byte[socket.getReceiveBufferSize()];
-                    packet = new DatagramPacket(imgbuf, imgbuf.length);
-                    socket.receive(packet);
-                    // turn packet into stream
-                    InputStream is = new ByteArrayInputStream(packet.getData());
-                    BufferedImage img = ImageIO.read(is);
-                    ImageIO.write(img, pd.getImgTail(), new File("RECIEVED." + pd.getImgTail()));
-                    pd = new PuzzleData(received, img);
-                    // create pdf
-                    PDFGenerator pdfGenerator = null;
-                    switch (pd.getShapeType()) {
-                        case JIGSAW:
-                            Jigsaw jiggy = new Jigsaw(pd);
-                            pdfGenerator = new PDFGenerator(jiggy.getJigsawPieces());
-                            break;
-                        case SQUARE:
-                            Square square = new Square(pd);
-                            pdfGenerator = new PDFGenerator(square.getPieces());
-                            break;
-                    }
-                    // save pdf to output stream
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    pdfGenerator.getfinalPuzzle().save(outputStream);
-                    outputStream.flush();
-                    //send pdf back to client
-                    InetAddress address = packet.getAddress();
-                    int port = packet.getPort();
-                    byte[] pdfBuf = outputStream.toByteArray();
-                    packet = new DatagramPacket(pdfBuf, pdfBuf.length, address, port);
-                    socket.setSendBufferSize(pdfBuf.length);
-                    socket.send(packet);
-                    // done receiving
-                    isReceiving = false;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            while (isSending) {
-                try {
-                    String sending = "we got dis shit";
-                    byte[] buf = sending.getBytes();
-                    InetAddress address = packet.getAddress();
-                    int port = packet.getPort();
-                    packet = new DatagramPacket(buf, buf.length, address, port);
-                    socket.setSendBufferSize(buf.length);
-                    socket.send(packet);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                isSending = false;
-            }
-            socket.close();
         }
     }
 }

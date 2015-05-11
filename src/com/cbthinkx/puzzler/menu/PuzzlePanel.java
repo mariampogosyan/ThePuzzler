@@ -142,6 +142,7 @@ public class PuzzlePanel extends JPanel {
 							try {
 								PDFDoc.save(new File("GOTAPDF.pdf"));
 								Desktop.getDesktop().open(new File("GOTAPDF.pdf"));
+								PDFDoc.close();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

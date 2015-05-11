@@ -1,71 +1,93 @@
 package com.cbthinkx.puzzler.CoreService;
 
-import com.cbthinkx.puzzler.CoreService.PuzzleData;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import javax.imageio.ImageIO;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
-/**
- * Created by Robert on 4/29/15.
- */
-public class PuzzleClientSend {
+public class PuzzleClientSend extends Thread {
     private final static String SERVER_ADDRESS = "127.0.0.1";
     private final static int PORT_NUMBER = 25565;
+    private PDDocument pdfDoc = null;
 
     public PuzzleClientSend() {
     }
     public PDDocument PuzzleClientSend(PuzzleData pd) {
         try (
-            // get a datagram socket
-            DatagramSocket socket = new DatagramSocket()
+                Socket socket = new Socket(SERVER_ADDRESS, PORT_NUMBER);
         ) {
-//            byte[] buf = new byte[256];
-//            // receive request for size of image
-//            DatagramPacket packet = new DatagramPacket(buf, buf.length);
-//            socket.receive(packet);
-
-            // figure out response
-            byte[] pdBuf = pd.toString().getBytes();
-
-            // send the response to the client at "address" and "port"
-            InetAddress address = InetAddress.getByName(SERVER_ADDRESS);
-            int port = PORT_NUMBER;
-            DatagramPacket packet = new DatagramPacket(pdBuf, pdBuf.length, address, port);
-            socket.setSendBufferSize(pdBuf.length);
-            socket.send(packet);
-            // send request for pdf size
-            ByteArrayOutputStream boas = new ByteArrayOutputStream();
-            ImageIO.write(pd.getImage(), pd.getImgTail(), boas);
-            boas.flush();
-            byte[] imgBuf = boas.toByteArray();
-            packet = new DatagramPacket(imgBuf, imgBuf.length, address, port);
-            socket.setSendBufferSize(imgBuf.length);
-            socket.send(packet);
-
-            byte[] pdfBuff = new byte[socket.getReceiveBufferSize()];
-            packet = new DatagramPacket(pdfBuff, pdfBuff.length);
-            socket.setSendBufferSize(pdfBuff.length);
-            socket.receive(packet);
-
-            InputStream is = new ByteArrayInputStream(packet.getData());
-            PDDocument pdf = PDDocument.load(is);
-            // get final response
-            byte[] buf = new byte[socket.getReceiveBufferSize()];
-            packet = new DatagramPacket(buf, buf.length);
-            socket.receive(packet);
-            String received = new String(packet.getData(), 0, packet.getLength());
-            System.out.println("Received: " + received);
+            Thread sendPDThread = new Thread(
+                    () -> sendPuzzleData(socket, pd)
+            );
+            sendPDThread.start();
+            while (sendPDThread.isAlive());
+            System.out.println("done sending");
             socket.close();
-            return pdf;
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
-        return null;
+        return pdfDoc;
+    }
+    public void run() {
+
+    }
+    public byte[] getSizeInBytes(String s) {
+        return ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN).putInt(s.getBytes().length).array();
+    }
+    public int getSizeFromBuf(byte[] buf) {
+        return ByteBuffer.wrap(buf).order(ByteOrder.BIG_ENDIAN).getInt();
+    }
+    public void sendPuzzleData(Socket ss,PuzzleData pd) {
+        try (
+            OutputStream out = ss.getOutputStream()
+        ) {
+            //gets the length of the strings bytes
+            byte[] toStringSize = getSizeInBytes(pd.toString());
+            //writes that to the OutputStream
+            out.write(toStringSize);
+            //gets the string and puts it in a ByteBuffer
+            byte[] stringBuff = pd.toString().getBytes();
+            //writes the stringBuff to the OutputStream
+            out.write(stringBuff);
+            //writes the image to the OutputStream
+            ImageIO.write(pd.getImage(), pd.getImgTail(), out);
+            out.flush();
+            ss.shutdownOutput();
+            recievePDF(ss);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void recievePDF(Socket ss) {
+        try (
+            InputStream in = ss.getInputStream();
+        ) {
+            System.out.println("recievePDF");
+            //size of the pdfDoc
+            byte[] pdfSize = new byte[4];
+            //gets the size of the pdf
+            in.read(pdfSize);
+            System.out.println("pdfSize: " + pdfSize.toString());
+            System.out.println("pdfSizeInt: " + getSizeFromBuf(pdfSize));
+            //creates buffer to store the pdf
+            byte[] pdfBuf = new byte[getSizeFromBuf(pdfSize)];
+            //recieve the pdf
+            in.read(pdfBuf);
+            System.out.println("PDFBufSize: " + pdfBuf.length);
+            //put the pdfBuf into an InputStream
+            InputStream is = new ByteArrayInputStream(pdfBuf);
+            //creates the pdfDocument from the is stream
+            PDDocument pdf = PDDocument.load(is);
+            //now i can do shit with my pdf hahahahahaha
+            this.pdfDoc = pdf;
+            ss.shutdownInput();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

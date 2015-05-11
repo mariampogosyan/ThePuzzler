@@ -11,9 +11,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-/**
- * Created by Robert on 4/29/15.
- */
 public class TestClient {
     public static void main(String[] sa) {
         new TestClient().doIt("127.0.0.1", 25565);
@@ -38,6 +35,7 @@ public class TestClient {
         try {
             PDFDoc.save(new File("GOTAPDF.pdf"));
             Desktop.getDesktop().open(new File("GOTAPDF.pdf"));
+            PDFDoc.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
