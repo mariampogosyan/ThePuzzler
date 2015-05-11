@@ -6,6 +6,7 @@ import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
 
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -17,8 +18,10 @@ public class Square {
     private ArrayList<PieceNode> pieces = new ArrayList<>();
 	int width;
 	int height;
-	int npw;
-	int nph;
+	int col;
+	int row;
+	int pWidth; 
+	int pHeight;
     public ArrayList<PieceNode> getPieces() {
         return pieces;
     }
@@ -28,7 +31,7 @@ public class Square {
     public static void main(String[] sa) {
         BufferedImage orig = null;
         try {
-            orig = ImageIO.read(new File("res/puzzle.jpg"));
+            orig = ImageIO.read(new File("res/Cute_Duck.jpg"));
         } catch (Exception e) {
 
         }
@@ -43,8 +46,7 @@ public class Square {
         );
         Square sp = new Square(pd);
 		System.out.println(sp.getPieces().size());
-		System.out.println("NPH: " + sp.getNph() + " NPW: " + sp.getNpw());
-		PuzzleTree pTree = new PuzzleTree(sp.getPieces(), sp.getNph(), sp.getNpw());
+		PuzzleTree pTree = new PuzzleTree(sp.getPieces(), sp.getCol(), sp.getRow());
 		int c = 0;
 		for (Object x : pTree) {
 			PieceNode y = (PieceNode) x;
@@ -68,30 +70,26 @@ public class Square {
 		width = nImage.getWidth();	
 		squareIt();
 	}
-	public void squareIt() {
-		npw = (width/pd.getSkill().getVal());
-		nph = (height/pd.getSkill().getVal());
+	public void squareIt() { 
+		col = (nImage.getWidth()/ PuzzleSkill.ADULT.getVal());
+		pWidth = nImage.getWidth()/col;
+		row = (int) (nImage.getHeight()/pWidth);
+		pHeight = pWidth;
+		row = nImage.getHeight()/pHeight;
+		pHeight = nImage.getHeight()/row;
 		
-		for (int i = 0; i < nph; i++) {
-			for (int j = 0; j < npw; j++) {
-				int row = j * width / npw;
-				int col = i * height / nph;
-				image = nImage.getSubimage(row, col, width / npw, height / nph);
-				PieceNode pn = new PieceNode(j, i, row, col, image, width / npw, height / nph);
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				image = nImage.getSubimage(j*pWidth, i*pHeight, pWidth, pHeight);
+				PieceNode pn = new PieceNode(i, j, col, row, image, pWidth, pHeight);
 				pieces.add(pn);
 			}
        }
 	}
-	public int getPWidth() {
-		return  width/npw;
+	public int getCol() {
+		return col;		
 	}
-	public int getPHeight() {
-		return  height/nph;
-	}
-	public int getNpw() {
-		return npw;		
-	}
-	public int getNph() {
-		return nph;
+	public int getRow() {
+		return row;
 	}
 }

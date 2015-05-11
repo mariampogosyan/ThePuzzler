@@ -21,12 +21,12 @@ public class TestClient {
     public void doIt(String address, int port) {
         BufferedImage orig = null;
         try {
-            orig = ImageIO.read(new File("res/colors.jpg"));
+            orig = ImageIO.read(new File("res/colors3.jpg"));
         } catch (Exception e) {
 
         }
         PuzzleData pd = new PuzzleData(
-                PieceShape.JIGSAW,
+                PieceShape.SQUARE,
                 PuzzleShape.SQUARE,
                 PuzzleSkill.ADULT,
                 PuzzleType.ONESIDED,

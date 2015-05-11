@@ -28,7 +28,7 @@ public class SplitUpImage extends JFrame {
         pack();
         setLocationRelativeTo(null);
         try {
-            orig = ImageIO.read(new File("res/colors2.png"));
+            orig = ImageIO.read(new File("res/colors3.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }

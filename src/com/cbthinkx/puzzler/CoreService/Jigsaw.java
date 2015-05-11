@@ -4,9 +4,11 @@ import com.cbthinkx.puzzler.CoreService.Enum.PieceShape;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
+
 import org.apache.pdfbox.exceptions.COSVisitorException;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
@@ -25,11 +27,10 @@ public class Jigsaw {
 	private PuzzleData pd;
 	private PuzzleTree pt;
 
-
 	public static void main(String[] sa) {
 		BufferedImage orig = null;
 		try {
-			orig = ImageIO.read(new File("res/colors.jpg"));
+			orig = ImageIO.read(new File("res/colors3.png"));
 		} catch (Exception e) {
             e.printStackTrace();
 		}
@@ -39,7 +40,7 @@ public class Jigsaw {
 				PuzzleSkill.BABY,
 				PuzzleType.ONESIDED,
 				orig,
-				"jpg",
+				"png",
 				10.0
 		);
 		Jigsaw jiggy = new Jigsaw(pd);
@@ -55,18 +56,33 @@ public class Jigsaw {
 	public Jigsaw(PuzzleData pd) {
 //		pd.setImage(new ImageUtility().newImage(this.pd.getSize(), this.pd.getShape(), this.pd.getImage()));
 		this.pd = pd;
-		this.row = (pd.getImage().getWidth() / pd.getSkill().getVal());
-		this.col = (pd.getImage().getHeight() / pd.getSkill().getVal());
 		this.origWidth = pd.getImage().getWidth();
 		this.origHeight = pd.getImage().getHeight();
-		this.pieceWidth = pd.getImage().getWidth() / row;
-		this.pieceHeight = pd.getImage().getHeight() / col;
+		this.col = (pd.getImage().getWidth() / pd.getSkill().getVal());
+		this.pieceWidth = pd.getImage().getWidth()/col;
+		this.row = (pd.getImage().getWidth()/this.pieceWidth);
+		this.pieceHeight = this.pieceWidth;
+		this.row = pd.getImage().getWidth()/this.pieceHeight;
+		this.pieceHeight = pd.getImage().getHeight()/row;
 		this.pd.setImage(offSetImage(pd.getImage()));
+
+
+//		this.pd = pd;
+//		this.row = (pd.getImage().getWidth() / pd.getSkill().getVal());
+//		this.col = (pd.getImage().getHeight() / pd.getSkill().getVal());
+//		this.origWidth = pd.getImage().getWidth();
+//		this.origHeight = pd.getImage().getHeight();
+//		this.pieceWidth = pd.getImage().getWidth() / row;
+//		this.pieceHeight = pd.getImage().getHeight() / col;
+//		this.pd.setImage(offSetImage(pd.getImage()));
 		jigSawIt();
 	}
+
+	
 	private void jigSawIt() {
 		this.pt = new PuzzleTree(splitUpImageUp(pd.getImage()), row, col);
 		setUpSides();
+		
 		for (Object x : pt) {
             PieceNode pn = (PieceNode) x;
 			System.out.println(pn.toString());
@@ -95,20 +111,20 @@ public class Jigsaw {
                 int offSetH = (pieceHeight / 3);
                 int pWidth = pieceWidth+2*offSetW;
                 int pHeight = pieceHeight+2*offSetH;
-                int y = (j * ((origWidth) / row)-offSetH);
-                y = y + offSetH;
-                int x = (i * ((origHeight) / col)-offSetW);
+                int x = (j * ((origWidth) / col)-offSetW);
                 x = x + offSetW;
-				System.out.println("offSetH: " + offSetH + " offSetW: " + offSetW);
+                int y = (i * ((origHeight) / row)-offSetH);
+                y = y + offSetH;
+               	System.out.println("offSetH: " + offSetH + " offSetW: " + offSetW);
 				System.out.println("X: " + x + " Y: " + y + " Width: " + main.getWidth() + " Height: " + main.getHeight());
 				image = main.getSubimage(x, y, pWidth, pHeight);
-				PieceNode pn = new PieceNode(j, i, x, y, image, pWidth, pHeight);
+				PieceNode pn = new PieceNode(i, j, x, y, image, pWidth, pHeight);
 				pieces.add(pn);
 			}
 		}
 		return pieces;
 	}
-	private void setUpSides() {
+		private void setUpSides() {
 		for (Object x : pt) {
 			PieceNode pieceNode = (PieceNode) x;
 			if (pt.hasRightPiece(pieceNode)) {
