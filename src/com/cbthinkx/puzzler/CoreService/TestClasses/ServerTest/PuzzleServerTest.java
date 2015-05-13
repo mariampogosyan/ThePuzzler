@@ -1,20 +1,28 @@
-package com.cbthinkx.puzzler.CoreService;
+package com.cbthinkx.puzzler.CoreService.TestClasses.ServerTest;
 
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-
-import javax.imageio.ImageIO;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class PuzzleServer {
+import javax.imageio.ImageIO;
+
+import com.cbthinkx.puzzler.CoreService.Jigsaw;
+import com.cbthinkx.puzzler.CoreService.PDFGenerator;
+import com.cbthinkx.puzzler.CoreService.PuzzleData;
+import com.cbthinkx.puzzler.CoreService.Square;
+import org.apache.pdfbox.pdmodel.PDDocument;
+
+public class PuzzleServerTest {
     public static void main(String[] args) throws IOException {
-        new PuzzleServer().doit(25565);
+        new PuzzleServerTest().doit(25565);
     }
     public void doit(int portNumber) {
         try {
@@ -35,15 +43,15 @@ public class PuzzleServer {
         private OutputStream out;
         ClientThread(Socket ss) {
             try {
-                this.is = ss.getInputStream();
-                this.out = ss.getOutputStream();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+				this.is = ss.getInputStream();
+	            this.out = ss.getOutputStream();
+   			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
         }
         @Override
         public void run() {
-            recievePDInfo();
+        	recievePDInfo();
         }
         public byte[] getSizeInBytes(int s) {
             return ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN).putInt(s).array();
@@ -94,11 +102,12 @@ public class PuzzleServer {
                 outputStream.close();
                 byte[] pdfBuf = outputStream.toByteArray();
                 byte[] pdfSize = getSizeInBytes(pdfBuf.length);
+                System.out.println("*** " + pdfBuf.length);
                 out.write(pdfSize);
                 out.write(pdfBuf);
                 out.flush();
             } catch (Exception e) {
-                System.out.println("BAD NEWS");
+            	System.out.println("BAD NEWS");
                 e.printStackTrace();
             }
         }

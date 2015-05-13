@@ -35,8 +35,8 @@ public class Jigsaw {
             e.printStackTrace();
 		}
 		PuzzleData pd = new PuzzleData(
-				PieceShape.SQUARE,
-				PuzzleShape.SQUARE,
+				PieceShape.JIGSAW,
+				PuzzleShape.ELLIPSE,
 				PuzzleSkill.BABY,
 				PuzzleType.ONESIDED,
 				orig,

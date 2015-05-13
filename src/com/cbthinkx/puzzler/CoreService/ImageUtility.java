@@ -66,11 +66,11 @@ public class ImageUtility {
     	int w = img.getWidth();
     	Ellipse2D.Double ellipse = new Ellipse2D.Double(0, 0, w, h);
         Graphics2D g2d = img.createGraphics();
-        g2d.setClip(ellipse);
         g2d.drawImage(img, null, 0, 0);
-        Rectangle2D rect = new Rectangle2D.Double();
-        rect.setRect(0, 0, w, h);
-        g2d.clip(rect);
+        g2d.setClip(ellipse);
+//        Rectangle2D rect = new Rectangle2D.Double();
+//        rect.setRect(0, 0, w, h);
+//        g2d.clip(rect);
         try {
 			ImageIO.write(img, "jpg", new File ("cropped.jpg"));
 		} catch (IOException e) {

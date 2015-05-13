@@ -138,7 +138,7 @@ public class PuzzlePanel extends JPanel {
 							pf.getData().setSkill(PuzzleSkill.valueOfIndex(skill.getSelectedIndex()));
 							pf.getData().setShapeType(PieceShape.valueOf(puzzle.getSelectedIndex()));
 							pf.getData().setType(PuzzleType.valueOf(side.getSelectedIndex()));
-							PDDocument PDFDoc = new PuzzleClientSend().PuzzleClientSend(pf.getData());
+							PDDocument PDFDoc = new PuzzleClientSend().PuzzleClientSendPD(pf.getData());
 							try {
 								PDFDoc.save(new File("GOTAPDF.pdf"));
 								Desktop.getDesktop().open(new File("GOTAPDF.pdf"));
