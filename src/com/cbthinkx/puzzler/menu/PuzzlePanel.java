@@ -29,7 +29,6 @@ public class PuzzlePanel extends JPanel {
 	final String[] skills = new String[] {"Level", "Baby", "Child", "Adult"};
 	final String[] shapes = new String[] {"Shape", "Square", "Ellipse", "Heart",};
 	final String[] sides = new String[] {"Sides", "One-Sided", "Two-Sided"};
-	private JLabel type;
 	private JTextField diag;
 	private BufferedImage image = null;
 	private double size;
@@ -113,8 +112,13 @@ public class PuzzlePanel extends JPanel {
 	}
 	@Override
 	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		g.drawImage(img, 0, (int)(pf.getHeight()*0.07), this);
+		if (image ==null) {
+			super.paintComponent(g);
+			g.drawImage(img, (int)(pf.getWidth()*0.015), (int)(pf.getHeight()*0.07), this);
+		} else {
+			super.paintComponent(g);
+			g.drawImage(image, (int)(pf.getWidth()*0.015), (int)(pf.getHeight()*0.07), img.getWidth(), img.getHeight(), this);
+		}
 	}
 	private ActionListener pzzl = ae -> {
 		if (image == null) {
@@ -171,9 +175,10 @@ public class PuzzlePanel extends JPanel {
             imgTail = imageFile.getName().substring(imageFile.getName().length()-3, imageFile.getName().length());
 			try {
 	            image = ImageIO.read(imageFile);
+	            repaint();
 	        } catch(IOException e) {
 	            System.out.println("read error: " + e.getMessage());
-	        }		
+	        }
 		}
 	};
 }
