@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -21,6 +20,7 @@ import com.cbthinkx.puzzler.CoreService.Enum.PuzzleShape;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleSkill;
 import com.cbthinkx.puzzler.CoreService.Enum.PuzzleType;
 import com.cbthinkx.puzzler.CoreService.PuzzleClientSend;
+import com.cbthinkx.puzzler.CoreService.PuzzleData;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 public class PuzzlePanel extends JPanel {
@@ -142,15 +142,7 @@ public class PuzzlePanel extends JPanel {
 							pf.getData().setSkill(PuzzleSkill.valueOfIndex(skill.getSelectedIndex()));
 							pf.getData().setShapeType(PieceShape.valueOf(puzzle.getSelectedIndex()));
 							pf.getData().setType(PuzzleType.valueOf(side.getSelectedIndex()));
-							PDDocument PDFDoc = new PuzzleClientSend().PuzzleClientSendPD(pf.getData());
-							try {
-								PDFDoc.save(new File("GOTAPDF.pdf"));
-								Desktop.getDesktop().open(new File("GOTAPDF.pdf"));
-								PDFDoc.close();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							System.out.println(pf.getData().toString());
+							getPDFDoc();
 						}
 					} else {
 						JOptionPane.showMessageDialog(pf, "Please, enter a bigger number");
@@ -161,8 +153,19 @@ public class PuzzlePanel extends JPanel {
 			}
 		}
 	};
+	private void getPDFDoc() {
+		PDDocument PDFDoc = new PuzzleClientSend().PuzzleClientSendPD(pf.getData());
+		try {
+			PDFDoc.save(new File("GOTAPDF.pdf"));
+			Desktop.getDesktop().open(new File("GOTAPDF.pdf"));
+			PDFDoc.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(pf.getData().toString());
+	}
 	private ActionListener upload = ae -> {
-		fc = new JFileChooser("C:\\");
+		fc = new JFileChooser("/Users/Robert/Documents/GitHub/ThePuzzler/res");
 		fc.setAcceptAllFileFilterUsed(false);
 		fc.setFileFilter(
 			new FileNameExtensionFilter(

@@ -60,7 +60,9 @@ public class PuzzleServer {
                 byte[] stringBuf = new byte[getSizeFromBuf(stringSize)];
                 is.read(stringBuf);
                 data = new String(stringBuf);
+                System.out.println("waiting for image");
                 BufferedImage image = ImageIO.read(is);
+                System.out.println("got image");
                 pd = new PuzzleData(data, image);
                 switch(pd.getShapeType()) {
                     case SQUARE: {

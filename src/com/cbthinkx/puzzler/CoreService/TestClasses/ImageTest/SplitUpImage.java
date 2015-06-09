@@ -10,6 +10,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class SplitUpImage extends JFrame {
     private int peiceWidth;
@@ -72,6 +75,7 @@ public class SplitUpImage extends JFrame {
         private ArrayList<Integer> yarr;
         private ArrayList<Integer> warr;
         private ArrayList<Integer> harr;
+        private ArrayList<rectClass> rect;
         private boolean booleano = true;
         private int count = 0;
         private static final long serialVersionUID = 1L;
@@ -125,11 +129,20 @@ public class SplitUpImage extends JFrame {
             gat.scale(1.0, -1.0);
             g2d.transform(gat);
             g2d.setColor(Color.blue);
-            g2d.drawImage(orig, null, -orig.getWidth() /2, -orig.getHeight()/2 );
+            g2d.setStroke(new BasicStroke(4.5f));
+            g2d.drawImage(orig, null, -orig.getWidth() / 2, -orig.getHeight() / 2);
             g2d.drawRect(-orig.getWidth() / 2, -orig.getHeight() / 2, orig.getWidth(), orig.getHeight());
+            ArrayList<Color> color = new ArrayList<>();
+            color.add(Color.BLACK);
+            color.add(Color.BLUE);
+            color.add(Color.RED);
+            color.add(Color.GREEN);
+//            Collections.shuffle(color);
             for (int x = 0; x < this.count; x++) {
-                g2d.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+//                g2d.setColor(new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
+                g2d.setColor(color.get(x));
                 g2d.drawRect(xarr.get(x), yarr.get(x), warr.get(x), harr.get(x));
+//                g2d.drawRect(rect.get(x).getX(), rect.get(x).getY(), rect.get(x).getPwidth(), rect.get(x).getPheight());
             }
             g2d.dispose();
         }
@@ -139,10 +152,11 @@ public class SplitUpImage extends JFrame {
             yarr = new ArrayList<>();
             harr = new ArrayList<>();
             warr = new ArrayList<>();
+            rect = new ArrayList<>();
             int width = orig.getWidth();
             int height = orig.getHeight();
-            for (int i = 0; i < row; i++) {
-                for (int j = 0; j < col; j++) {
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
                     int offSetW = (peiceWidth / 3);
                     int offSetH = (peiceHeight / 3);
                     int pWidth = peiceWidth+2*offSetW;
@@ -158,10 +172,13 @@ public class SplitUpImage extends JFrame {
                     System.out.print("  origWidth"+origWidth);
                     System.out.print("  origHeight"+origHeight);
                     System.out.print("  width"+width);
-                    System.out.print("  height"+height);
-                    System.out.print("  peiceWidth"+peiceWidth);
-                    System.out.print("  peiceHeight"+peiceHeight);
-                    System.out.println("  row"+row);
+                    System.out.print("  height" + height);
+                    System.out.print("  peiceWidth" + peiceWidth);
+                    System.out.print("  peiceHeight" + peiceHeight);
+                    System.out.println("  row" + row);
+//                    rectClass rect2 = new rectClass(x, y, pWidth, pHeight);
+//                    rect.add(rect2);
+////                    rect.add(new rectClass(x, y, pWidth, pHeight));
                     xarr.add(x);
                     yarr.add(y);
                     warr.add(pWidth);
@@ -169,7 +186,54 @@ public class SplitUpImage extends JFrame {
                 }
 
             }
+            Collections.shuffle(rect);
         }
+    }
+    private class rectClass {
+        public int getX() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
+
+        public int getPwidth() {
+            return pwidth;
+        }
+
+        public void setPwidth(int pwidth) {
+            this.pwidth = pwidth;
+        }
+
+        public int getPheight() {
+            return pheight;
+        }
+
+        public void setPheight(int pheight) {
+            this.pheight = pheight;
+        }
+
+        int x;
+        int y;
+        int pwidth;
+        int pheight;
+
+        public rectClass(int x, int y, int pwidth, int pheight) {
+            this.x = x;
+            this.y = y;
+            this.pheight = pheight;
+            this.pwidth = pwidth;
+        }
+
     }
 }
 
